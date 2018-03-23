@@ -8,17 +8,21 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class ApplicantJobApplicationController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private ApplicantJobApplicationLogic applicantJobApplicationLogic = new ApplicantJobApplicationLogic(new EFGenericRepository<ApplicantJobApplicationPoco>());
+        ApplicantJobApplicationPoco[] appJobAppPoco = new ApplicantJobApplicationPoco[1];
+
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: ApplicantJobApplication
         public ActionResult Index()
         {
-            var applicantJobApplications = db.ApplicantJobApplications.Include(a => a.ApplicantProfile).Include(a => a.CompanyJob);
+            var applicantJobApplications = applicantJobApplicationLogic.GetAll(); //db.ApplicantJobApplications.Include(a => a.ApplicantProfile).Include(a => a.CompanyJob);
             return View(applicantJobApplications.ToList());
         }
 
@@ -29,7 +33,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantJobApplicationPoco applicantJobApplicationPoco = db.ApplicantJobApplications.Find(id);
+            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
             if (applicantJobApplicationPoco == null)
             {
                 return HttpNotFound();
@@ -40,8 +44,8 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: ApplicantJobApplication/Create
         public ActionResult Create()
         {
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency");
-            ViewBag.Job = new SelectList(db.CompanyJobs, "Id", "Id");
+            ViewBag.Applicant = new SelectList(applicantJobApplicationLogic.GetAll(), "Applicant", "Applicant");
+            ViewBag.Job = new SelectList(applicantJobApplicationLogic.GetAll(), "Job", "Job");
             return View();
         }
 
@@ -55,13 +59,14 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 applicantJobApplicationPoco.Id = Guid.NewGuid();
-                db.ApplicantJobApplications.Add(applicantJobApplicationPoco);
-                db.SaveChanges();
+                appJobAppPoco[0] = applicantJobApplicationPoco;
+                applicantJobApplicationLogic.Add(appJobAppPoco);
+               
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantJobApplicationPoco.Applicant);
-            ViewBag.Job = new SelectList(db.CompanyJobs, "Id", "Id", applicantJobApplicationPoco.Job);
+            ViewBag.Applicant = new SelectList(applicantJobApplicationLogic.GetAll(), "Applicant", "Applicant");
+            ViewBag.Job = new SelectList(applicantJobApplicationLogic.GetAll(), "Job", "Job");
             return View(applicantJobApplicationPoco);
         }
 
@@ -72,13 +77,13 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantJobApplicationPoco applicantJobApplicationPoco = db.ApplicantJobApplications.Find(id);
+            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
             if (applicantJobApplicationPoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantJobApplicationPoco.Applicant);
-            ViewBag.Job = new SelectList(db.CompanyJobs, "Id", "Id", applicantJobApplicationPoco.Job);
+            ViewBag.Applicant = new SelectList(applicantJobApplicationLogic.GetAll(), "Applicant", "Applicant");
+            ViewBag.Job = new SelectList(applicantJobApplicationLogic.GetAll(), "Job", "Job");
             return View(applicantJobApplicationPoco);
         }
 
@@ -91,12 +96,13 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(applicantJobApplicationPoco).State = EntityState.Modified;
-                db.SaveChanges();
+                appJobAppPoco[0] = applicantJobApplicationPoco;
+                applicantJobApplicationLogic.Update(appJobAppPoco);
+               
                 return RedirectToAction("Index");
             }
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantJobApplicationPoco.Applicant);
-            ViewBag.Job = new SelectList(db.CompanyJobs, "Id", "Id", applicantJobApplicationPoco.Job);
+            ViewBag.Applicant = new SelectList(applicantJobApplicationLogic.GetAll(), "Applicant", "Applicant");
+            ViewBag.Job = new SelectList(applicantJobApplicationLogic.GetAll(), "Job", "Job");
             return View(applicantJobApplicationPoco);
         }
 
@@ -107,7 +113,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantJobApplicationPoco applicantJobApplicationPoco = db.ApplicantJobApplications.Find(id);
+            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
             if (applicantJobApplicationPoco == null)
             {
                 return HttpNotFound();
@@ -120,18 +126,19 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            ApplicantJobApplicationPoco applicantJobApplicationPoco = db.ApplicantJobApplications.Find(id);
-            db.ApplicantJobApplications.Remove(applicantJobApplicationPoco);
-            db.SaveChanges();
+            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
+            appJobAppPoco[0] = applicantJobApplicationPoco;
+            applicantJobApplicationLogic.Delete(appJobAppPoco);
+           
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
