@@ -8,17 +8,20 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class ApplicantProfileController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private ApplicantProfileLogic applicantProfileLogic = new ApplicantProfileLogic(new EFGenericRepository<ApplicantProfilePoco>());
+        ApplicantProfilePoco[] appProfilePoco = new ApplicantProfilePoco[1];
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: ApplicantProfile
         public ActionResult Index()
         {
-            var applicantProfilePocos = db.ApplicantProfilePocos.Include(a => a.SecurityLogin).Include(a => a.SystemCountryCode);
+            var applicantProfilePocos = applicantProfileLogic.GetAll(); //db.ApplicantProfilePocos.Include(a => a.SecurityLogin).Include(a => a.SystemCountryCode);
             return View(applicantProfilePocos.ToList());
         }
 
@@ -29,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantProfilePoco applicantProfilePoco = db.ApplicantProfilePocos.Find(id);
+            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id); //db.ApplicantProfilePocos.Find(id);
             if (applicantProfilePoco == null)
             {
                 return HttpNotFound();
@@ -40,8 +43,8 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: ApplicantProfile/Create
         public ActionResult Create()
         {
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login");
-            ViewBag.Country = new SelectList(db.SystemCountryCodes, "Code", "Name");
+            ViewBag.Login = new SelectList(applicantProfileLogic.GetAll(), "Login", "Login");
+            ViewBag.Country = new SelectList(applicantProfileLogic.GetAll(), "Country", "Country");
             return View();
         }
 
@@ -55,13 +58,15 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 applicantProfilePoco.Id = Guid.NewGuid();
-                db.ApplicantProfilePocos.Add(applicantProfilePoco);
-                db.SaveChanges();
+                appProfilePoco[0] = applicantProfilePoco;
+
+                applicantProfileLogic.Add(appProfilePoco);
+                
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", applicantProfilePoco.Login);
-            ViewBag.Country = new SelectList(db.SystemCountryCodes, "Code", "Name", applicantProfilePoco.Country);
+            ViewBag.Login = new SelectList(applicantProfileLogic.GetAll(), "Login", "Login");
+            ViewBag.Country = new SelectList(applicantProfileLogic.GetAll(), "Country", "Country");
             return View(applicantProfilePoco);
         }
 
@@ -72,13 +77,13 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantProfilePoco applicantProfilePoco = db.ApplicantProfilePocos.Find(id);
+            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id); //db.ApplicantProfilePocos.Find(id);
             if (applicantProfilePoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", applicantProfilePoco.Login);
-            ViewBag.Country = new SelectList(db.SystemCountryCodes, "Code", "Name", applicantProfilePoco.Country);
+            ViewBag.Login = new SelectList(applicantProfileLogic.GetAll(), "Login", "Login");
+            ViewBag.Country = new SelectList(applicantProfileLogic.GetAll(), "Country", "Country");
             return View(applicantProfilePoco);
         }
 
@@ -91,12 +96,12 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(applicantProfilePoco).State = EntityState.Modified;
-                db.SaveChanges();
+                appProfilePoco[0] = applicantProfilePoco;
+                applicantProfileLogic.Update(appProfilePoco);
                 return RedirectToAction("Index");
             }
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", applicantProfilePoco.Login);
-            ViewBag.Country = new SelectList(db.SystemCountryCodes, "Code", "Name", applicantProfilePoco.Country);
+            ViewBag.Login = new SelectList(applicantProfileLogic.GetAll(), "Login", "Login");
+            ViewBag.Country = new SelectList(applicantProfileLogic.GetAll(), "Country", "Country");
             return View(applicantProfilePoco);
         }
 
@@ -107,7 +112,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantProfilePoco applicantProfilePoco = db.ApplicantProfilePocos.Find(id);
+            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id); //db.ApplicantProfilePocos.Find(id);
             if (applicantProfilePoco == null)
             {
                 return HttpNotFound();
@@ -120,18 +125,19 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            ApplicantProfilePoco applicantProfilePoco = db.ApplicantProfilePocos.Find(id);
-            db.ApplicantProfilePocos.Remove(applicantProfilePoco);
-            db.SaveChanges();
+            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id); //db.ApplicantProfilePocos.Find(id);
+            appProfilePoco[0] = applicantProfilePoco;
+            applicantProfileLogic.Delete(appProfilePoco);
+
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
