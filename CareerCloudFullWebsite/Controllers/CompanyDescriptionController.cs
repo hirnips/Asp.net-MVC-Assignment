@@ -8,17 +8,21 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class CompanyDescriptionController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private CompanyDescriptionLogic companyDescriptionLogic = new CompanyDescriptionLogic(new EFGenericRepository<CompanyDescriptionPoco>());
+        CompanyDescriptionPoco[] compDescriptionPoco = new CompanyDescriptionPoco[1];
+
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: CompanyDescription
         public ActionResult Index()
         {
-            var companyDescriptions = db.CompanyDescriptions.Include(c => c.companyProfile).Include(c => c.SystemLanguageCode);
+            var companyDescriptions = companyDescriptionLogic.GetAll(); //db.CompanyDescriptions.Include(c => c.companyProfile).Include(c => c.SystemLanguageCode);
             return View(companyDescriptions.ToList());
         }
 
@@ -29,7 +33,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyDescriptionPoco companyDescriptionPoco = db.CompanyDescriptions.Find(id);
+            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id); //db.CompanyDescriptions.Find(id);
             if (companyDescriptionPoco == null)
             {
                 return HttpNotFound();
@@ -40,8 +44,8 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: CompanyDescription/Create
         public ActionResult Create()
         {
-            ViewBag.Company = new SelectList(db.CompanyProfiles, "Id", "CompanyWebsite");
-            ViewBag.LanguageId = new SelectList(db.SystemLanguageCodes, "LanguageID", "Name");
+            ViewBag.Company = new SelectList(companyDescriptionLogic.GetAll(), "Company", "Company");
+            ViewBag.LanguageId = new SelectList(companyDescriptionLogic.GetAll(), "LanguageId", "LanguageId");
             return View();
         }
 
@@ -55,13 +59,13 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 companyDescriptionPoco.Id = Guid.NewGuid();
-                db.CompanyDescriptions.Add(companyDescriptionPoco);
-                db.SaveChanges();
+                compDescriptionPoco[0] = companyDescriptionPoco;
+                companyDescriptionLogic.Add(compDescriptionPoco);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Company = new SelectList(db.CompanyProfiles, "Id", "CompanyWebsite", companyDescriptionPoco.Company);
-            ViewBag.LanguageId = new SelectList(db.SystemLanguageCodes, "LanguageID", "Name", companyDescriptionPoco.LanguageId);
+            ViewBag.Company = new SelectList(companyDescriptionLogic.GetAll(), "Company", "Company");
+            ViewBag.LanguageId = new SelectList(companyDescriptionLogic.GetAll(), "LanguageId", "LanguageId");
             return View(companyDescriptionPoco);
         }
 
@@ -72,13 +76,13 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyDescriptionPoco companyDescriptionPoco = db.CompanyDescriptions.Find(id);
+            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id); //db.CompanyDescriptions.Find(id);
             if (companyDescriptionPoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Company = new SelectList(db.CompanyProfiles, "Id", "CompanyWebsite", companyDescriptionPoco.Company);
-            ViewBag.LanguageId = new SelectList(db.SystemLanguageCodes, "LanguageID", "Name", companyDescriptionPoco.LanguageId);
+            ViewBag.Company = new SelectList(companyDescriptionLogic.GetAll(), "Company", "Company");
+            ViewBag.LanguageId = new SelectList(companyDescriptionLogic.GetAll(), "LanguageId", "LanguageId");
             return View(companyDescriptionPoco);
         }
 
@@ -91,12 +95,12 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(companyDescriptionPoco).State = EntityState.Modified;
-                db.SaveChanges();
+                compDescriptionPoco[0] = companyDescriptionPoco;
+                companyDescriptionLogic.Update(compDescriptionPoco);
                 return RedirectToAction("Index");
             }
-            ViewBag.Company = new SelectList(db.CompanyProfiles, "Id", "CompanyWebsite", companyDescriptionPoco.Company);
-            ViewBag.LanguageId = new SelectList(db.SystemLanguageCodes, "LanguageID", "Name", companyDescriptionPoco.LanguageId);
+            ViewBag.Company = new SelectList(companyDescriptionLogic.GetAll(), "Company", "Company");
+            ViewBag.LanguageId = new SelectList(companyDescriptionLogic.GetAll(), "LanguageId", "LanguageId");
             return View(companyDescriptionPoco);
         }
 
@@ -107,7 +111,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyDescriptionPoco companyDescriptionPoco = db.CompanyDescriptions.Find(id);
+            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id); //db.CompanyDescriptions.Find(id);
             if (companyDescriptionPoco == null)
             {
                 return HttpNotFound();
@@ -120,18 +124,19 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            CompanyDescriptionPoco companyDescriptionPoco = db.CompanyDescriptions.Find(id);
-            db.CompanyDescriptions.Remove(companyDescriptionPoco);
-            db.SaveChanges();
+            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id); //db.CompanyDescriptions.Find(id);
+            compDescriptionPoco[0] = companyDescriptionPoco;
+            companyDescriptionLogic.Delete(compDescriptionPoco);
+
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
