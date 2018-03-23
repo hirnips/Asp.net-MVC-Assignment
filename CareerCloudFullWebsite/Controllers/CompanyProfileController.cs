@@ -90,7 +90,7 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 compProfilePoco[0] = companyProfilePoco;
-                companyProfileLogic.Add(compProfilePoco);
+                companyProfileLogic.Update(compProfilePoco);
                 return RedirectToAction("Index");
             }
             return View(companyProfilePoco);
@@ -118,7 +118,7 @@ namespace CareerCloudFullWebsite.Controllers
         {
             CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id); //db.CompanyProfiles.Find(id);
             compProfilePoco[0] = companyProfilePoco;
-            companyProfileLogic.Add(compProfilePoco);
+            companyProfileLogic.Delete(compProfilePoco);
             return RedirectToAction("Index");
         }
 

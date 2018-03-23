@@ -94,7 +94,7 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 compLocationPoco[0] = companyLocationPoco;
-                companyLocationLogic.Add(compLocationPoco);
+                companyLocationLogic.Update(compLocationPoco);
                 return RedirectToAction("Index");
             }
             ViewBag.Company = new SelectList(companyLocationLogic.GetAll(), "Company", "Company");
@@ -123,7 +123,7 @@ namespace CareerCloudFullWebsite.Controllers
         {
             CompanyLocationPoco companyLocationPoco = companyLocationLogic.Get(id); //db.CompanyLocations.Find(id);
             compLocationPoco[0] = companyLocationPoco;
-            companyLocationLogic.Add(compLocationPoco);
+            companyLocationLogic.Delete(compLocationPoco);
             return RedirectToAction("Index");
         }
 
