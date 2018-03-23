@@ -8,17 +8,20 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class CompanyJobController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private CompanyJobLogic companyJobLogic = new CompanyJobLogic(new EFGenericRepository<CompanyJobPoco>());
+        CompanyJobPoco[] compJobPoco = new CompanyJobPoco[1];
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: CompanyJob
         public ActionResult Index()
         {
-            var companyJobs = db.CompanyJobs.Include(c => c.CompanyProfile);
+            var companyJobs = companyJobLogic.GetAll(); //db.CompanyJobs.Include(c => c.CompanyProfile);
             return View(companyJobs.ToList());
         }
 
@@ -29,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyJobPoco companyJobPoco = db.CompanyJobs.Find(id);
+            CompanyJobPoco companyJobPoco = companyJobLogic.Get(id); //db.CompanyJobs.Find(id);
             if (companyJobPoco == null)
             {
                 return HttpNotFound();
@@ -40,7 +43,7 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: CompanyJob/Create
         public ActionResult Create()
         {
-            ViewBag.Company = new SelectList(db.CompanyProfiles, "Id", "CompanyWebsite");
+            ViewBag.Company = new SelectList(companyJobLogic.GetAll(), "Company", "Company");
             return View();
         }
 
@@ -54,12 +57,13 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 companyJobPoco.Id = Guid.NewGuid();
-                db.CompanyJobs.Add(companyJobPoco);
-                db.SaveChanges();
+                compJobPoco[0] = companyJobPoco;
+                companyJobLogic.Add(compJobPoco);
+                
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Company = new SelectList(db.CompanyProfiles, "Id", "CompanyWebsite", companyJobPoco.Company);
+            ViewBag.Company = new SelectList(companyJobLogic.GetAll(), "Company", "Company");
             return View(companyJobPoco);
         }
 
@@ -70,12 +74,12 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyJobPoco companyJobPoco = db.CompanyJobs.Find(id);
+            CompanyJobPoco companyJobPoco = companyJobLogic.Get(id); //db.CompanyJobs.Find(id);
             if (companyJobPoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Company = new SelectList(db.CompanyProfiles, "Id", "CompanyWebsite", companyJobPoco.Company);
+            ViewBag.Company = new SelectList(companyJobLogic.GetAll(), "Company", "Company");
             return View(companyJobPoco);
         }
 
@@ -88,11 +92,11 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(companyJobPoco).State = EntityState.Modified;
-                db.SaveChanges();
+                compJobPoco[0] = companyJobPoco;
+                companyJobLogic.Update(compJobPoco);
                 return RedirectToAction("Index");
             }
-            ViewBag.Company = new SelectList(db.CompanyProfiles, "Id", "CompanyWebsite", companyJobPoco.Company);
+            ViewBag.Company = new SelectList(companyJobLogic.GetAll(), "Company", "Company");
             return View(companyJobPoco);
         }
 
@@ -103,7 +107,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyJobPoco companyJobPoco = db.CompanyJobs.Find(id);
+            CompanyJobPoco companyJobPoco = companyJobLogic.Get(id); //db.CompanyJobs.Find(id);
             if (companyJobPoco == null)
             {
                 return HttpNotFound();
@@ -116,18 +120,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            CompanyJobPoco companyJobPoco = db.CompanyJobs.Find(id);
-            db.CompanyJobs.Remove(companyJobPoco);
-            db.SaveChanges();
+            CompanyJobPoco companyJobPoco = companyJobLogic.Get(id); //db.CompanyJobs.Find(id);
+            compJobPoco[0] = companyJobPoco;
+            companyJobLogic.Delete(compJobPoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }

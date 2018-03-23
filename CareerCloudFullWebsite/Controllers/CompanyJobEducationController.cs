@@ -8,17 +8,20 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class CompanyJobEducationController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private CompanyJobEducationLogic companyJobEducationLogic = new CompanyJobEducationLogic(new EFGenericRepository<CompanyJobEducationPoco>());
+        CompanyJobEducationPoco[] compJobEducationPoco = new CompanyJobEducationPoco[1];
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: CompanyJobEducation
         public ActionResult Index()
         {
-            var companyJobEducations = db.CompanyJobEducations.Include(c => c.CompanyJob);
+            var companyJobEducations = companyJobEducationLogic.GetAll(); //db.CompanyJobEducations.Include(c => c.CompanyJob);
             return View(companyJobEducations.ToList());
         }
 
@@ -29,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyJobEducationPoco companyJobEducationPoco = db.CompanyJobEducations.Find(id);
+            CompanyJobEducationPoco companyJobEducationPoco = companyJobEducationLogic.Get(id);// db.CompanyJobEducations.Find(id);
             if (companyJobEducationPoco == null)
             {
                 return HttpNotFound();
@@ -40,7 +43,7 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: CompanyJobEducation/Create
         public ActionResult Create()
         {
-            ViewBag.Job = new SelectList(db.CompanyJobs, "Id", "Id");
+            ViewBag.Job = new SelectList(companyJobEducationLogic.GetAll(), "Job", "Job");
             return View();
         }
 
@@ -54,12 +57,13 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 companyJobEducationPoco.Id = Guid.NewGuid();
-                db.CompanyJobEducations.Add(companyJobEducationPoco);
-                db.SaveChanges();
+                compJobEducationPoco[0] = companyJobEducationPoco;
+                companyJobEducationLogic.Add(compJobEducationPoco);
+                
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Job = new SelectList(db.CompanyJobs, "Id", "Id", companyJobEducationPoco.Job);
+            ViewBag.Job = new SelectList(companyJobEducationLogic.GetAll(), "Job", "Job");
             return View(companyJobEducationPoco);
         }
 
@@ -70,12 +74,12 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyJobEducationPoco companyJobEducationPoco = db.CompanyJobEducations.Find(id);
+            CompanyJobEducationPoco companyJobEducationPoco = companyJobEducationLogic.Get(id); //db.CompanyJobEducations.Find(id);
             if (companyJobEducationPoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Job = new SelectList(db.CompanyJobs, "Id", "Id", companyJobEducationPoco.Job);
+            ViewBag.Job = new SelectList(companyJobEducationLogic.GetAll(), "Job", "Job");
             return View(companyJobEducationPoco);
         }
 
@@ -88,11 +92,11 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(companyJobEducationPoco).State = EntityState.Modified;
-                db.SaveChanges();
+                compJobEducationPoco[0] = companyJobEducationPoco;
+                companyJobEducationLogic.Add(compJobEducationPoco);
                 return RedirectToAction("Index");
             }
-            ViewBag.Job = new SelectList(db.CompanyJobs, "Id", "Id", companyJobEducationPoco.Job);
+            ViewBag.Job = new SelectList(companyJobEducationLogic.GetAll(), "Job", "Job");
             return View(companyJobEducationPoco);
         }
 
@@ -103,7 +107,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyJobEducationPoco companyJobEducationPoco = db.CompanyJobEducations.Find(id);
+            CompanyJobEducationPoco companyJobEducationPoco = companyJobEducationLogic.Get(id); //db.CompanyJobEducations.Find(id);
             if (companyJobEducationPoco == null)
             {
                 return HttpNotFound();
@@ -116,18 +120,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            CompanyJobEducationPoco companyJobEducationPoco = db.CompanyJobEducations.Find(id);
-            db.CompanyJobEducations.Remove(companyJobEducationPoco);
-            db.SaveChanges();
+            CompanyJobEducationPoco companyJobEducationPoco = companyJobEducationLogic.Get(id); //db.CompanyJobEducations.Find(id);
+            compJobEducationPoco[0] = companyJobEducationPoco;
+            companyJobEducationLogic.Add(compJobEducationPoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
