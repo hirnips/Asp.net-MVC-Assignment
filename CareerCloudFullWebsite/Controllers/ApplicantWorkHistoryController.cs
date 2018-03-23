@@ -8,17 +8,20 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer; 
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class ApplicantWorkHistoryController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private ApplicantWorkHistoryLogic applicantWorkHistoryLogic = new ApplicantWorkHistoryLogic(new EFGenericRepository<ApplicantWorkHistoryPoco>());
+        ApplicantWorkHistoryPoco[] appWorkHistoryPoco = new ApplicantWorkHistoryPoco[1];
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: ApplicantWorkHistory
         public ActionResult Index()
         {
-            var applicantWorkHistorys = db.ApplicantWorkHistorys.Include(a => a.ApplicantProfile).Include(a => a.SystemCountryCode);
+            var applicantWorkHistorys = applicantWorkHistoryLogic.GetAll(); //db.ApplicantWorkHistorys.Include(a => a.ApplicantProfile).Include(a => a.SystemCountryCode);
             return View(applicantWorkHistorys.ToList());
         }
 
@@ -29,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = db.ApplicantWorkHistorys.Find(id);
+            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id); //db.ApplicantWorkHistorys.Find(id);
             if (applicantWorkHistoryPoco == null)
             {
                 return HttpNotFound();
@@ -40,8 +43,8 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: ApplicantWorkHistory/Create
         public ActionResult Create()
         {
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency");
-            ViewBag.CountryCode = new SelectList(db.SystemCountryCodes, "Code", "Name");
+            ViewBag.Applicant = new SelectList(applicantWorkHistoryLogic.GetAll(), "Applicant", "Applicant");
+            ViewBag.CountryCode = new SelectList(applicantWorkHistoryLogic.GetAll(), "CountryCode", "CountryCode");
             return View();
         }
 
@@ -55,13 +58,14 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 applicantWorkHistoryPoco.Id = Guid.NewGuid();
-                db.ApplicantWorkHistorys.Add(applicantWorkHistoryPoco);
-                db.SaveChanges();
+                appWorkHistoryPoco[0] = applicantWorkHistoryPoco;
+                applicantWorkHistoryLogic.Add(appWorkHistoryPoco);
+               
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantWorkHistoryPoco.Applicant);
-            ViewBag.CountryCode = new SelectList(db.SystemCountryCodes, "Code", "Name", applicantWorkHistoryPoco.CountryCode);
+            ViewBag.Applicant = new SelectList(applicantWorkHistoryLogic.GetAll(), "Applicant", "Applicant");
+            ViewBag.CountryCode = new SelectList(applicantWorkHistoryLogic.GetAll(), "CountryCode", "CountryCode");
             return View(applicantWorkHistoryPoco);
         }
 
@@ -72,13 +76,13 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = db.ApplicantWorkHistorys.Find(id);
+            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id);//db.ApplicantWorkHistorys.Find(id);
             if (applicantWorkHistoryPoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantWorkHistoryPoco.Applicant);
-            ViewBag.CountryCode = new SelectList(db.SystemCountryCodes, "Code", "Name", applicantWorkHistoryPoco.CountryCode);
+            ViewBag.Applicant = new SelectList(applicantWorkHistoryLogic.GetAll(), "Applicant", "Applicant");
+            ViewBag.CountryCode = new SelectList(applicantWorkHistoryLogic.GetAll(), "CountryCode", "CountryCode");
             return View(applicantWorkHistoryPoco);
         }
 
@@ -91,12 +95,13 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(applicantWorkHistoryPoco).State = EntityState.Modified;
-                db.SaveChanges();
+                appWorkHistoryPoco[0] = applicantWorkHistoryPoco;
+                applicantWorkHistoryLogic.Update(appWorkHistoryPoco);
+                
                 return RedirectToAction("Index");
             }
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantWorkHistoryPoco.Applicant);
-            ViewBag.CountryCode = new SelectList(db.SystemCountryCodes, "Code", "Name", applicantWorkHistoryPoco.CountryCode);
+            ViewBag.Applicant = new SelectList(applicantWorkHistoryLogic.GetAll(), "Applicant", "Applicant");
+            ViewBag.CountryCode = new SelectList(applicantWorkHistoryLogic.GetAll(), "CountryCode", "CountryCode");
             return View(applicantWorkHistoryPoco);
         }
 
@@ -107,7 +112,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = db.ApplicantWorkHistorys.Find(id);
+            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id); //db.ApplicantWorkHistorys.Find(id);
             if (applicantWorkHistoryPoco == null)
             {
                 return HttpNotFound();
@@ -120,18 +125,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = db.ApplicantWorkHistorys.Find(id);
-            db.ApplicantWorkHistorys.Remove(applicantWorkHistoryPoco);
-            db.SaveChanges();
+            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id);
+            appWorkHistoryPoco[0] = applicantWorkHistoryPoco;
+            applicantWorkHistoryLogic.Delete(appWorkHistoryPoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
