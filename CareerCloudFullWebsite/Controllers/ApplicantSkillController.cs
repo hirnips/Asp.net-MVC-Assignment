@@ -8,17 +8,20 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class ApplicantSkillController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private ApplicantSkillLogic applicantSkillLogic = new ApplicantSkillLogic(new EFGenericRepository<ApplicantSkillPoco>());
+        ApplicantSkillPoco[] appSkillPoco = new ApplicantSkillPoco[1];
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: ApplicantSkill
         public ActionResult Index()
         {
-            var applicantSkills = db.ApplicantSkills.Include(a => a.ApplicantProfile);
+            var applicantSkills = applicantSkillLogic.GetAll(); //db.ApplicantSkills.Include(a => a.ApplicantProfile);
             return View(applicantSkills.ToList());
         }
 
@@ -29,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantSkillPoco applicantSkillPoco = db.ApplicantSkills.Find(id);
+            ApplicantSkillPoco applicantSkillPoco = applicantSkillLogic.Get(id); //db.ApplicantSkills.Find(id);
             if (applicantSkillPoco == null)
             {
                 return HttpNotFound();
@@ -40,7 +43,7 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: ApplicantSkill/Create
         public ActionResult Create()
         {
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency");
+            ViewBag.Applicant = new SelectList(applicantSkillLogic.GetAll(), "Applicant", "Applicant");
             return View();
         }
 
@@ -54,12 +57,12 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 applicantSkillPoco.Id = Guid.NewGuid();
-                db.ApplicantSkills.Add(applicantSkillPoco);
-                db.SaveChanges();
+                appSkillPoco[0] = applicantSkillPoco;
+                applicantSkillLogic.Add(appSkillPoco);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantSkillPoco.Applicant);
+            ViewBag.Applicant = new SelectList(applicantSkillLogic.GetAll(), "Applicant", "Applicant");
             return View(applicantSkillPoco);
         }
 
@@ -70,12 +73,12 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantSkillPoco applicantSkillPoco = db.ApplicantSkills.Find(id);
+            ApplicantSkillPoco applicantSkillPoco = applicantSkillLogic.Get(id);//db.ApplicantSkills.Find(id);
             if (applicantSkillPoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantSkillPoco.Applicant);
+            ViewBag.Applicant = new SelectList(applicantSkillLogic.GetAll(), "Applicant", "Applicant");
             return View(applicantSkillPoco);
         }
 
@@ -88,11 +91,12 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(applicantSkillPoco).State = EntityState.Modified;
-                db.SaveChanges();
+                appSkillPoco[0] = applicantSkillPoco;
+                applicantSkillLogic.Update(appSkillPoco);
+               
                 return RedirectToAction("Index");
             }
-            ViewBag.Applicant = new SelectList(db.ApplicantProfilePocos, "Id", "Currency", applicantSkillPoco.Applicant);
+            ViewBag.Applicant = new SelectList(applicantSkillLogic.GetAll(), "Applicant", "Applicant");
             return View(applicantSkillPoco);
         }
 
@@ -103,7 +107,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantSkillPoco applicantSkillPoco = db.ApplicantSkills.Find(id);
+            ApplicantSkillPoco applicantSkillPoco = applicantSkillLogic.Get(id); //db.ApplicantSkills.Find(id);
             if (applicantSkillPoco == null)
             {
                 return HttpNotFound();
@@ -116,18 +120,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            ApplicantSkillPoco applicantSkillPoco = db.ApplicantSkills.Find(id);
-            db.ApplicantSkills.Remove(applicantSkillPoco);
-            db.SaveChanges();
+            ApplicantSkillPoco applicantSkillPoco = applicantSkillLogic.Get(id);//db.ApplicantSkills.Find(id);
+            appSkillPoco[0] = applicantSkillPoco;
+            applicantSkillLogic.Delete(appSkillPoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
