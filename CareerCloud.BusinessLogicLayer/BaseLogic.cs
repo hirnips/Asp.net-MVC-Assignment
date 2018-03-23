@@ -23,7 +23,7 @@ namespace CareerCloud.BusinessLogicLayer
             return;
         }
 
-        public virtual TPoco Get(Guid id)
+        public virtual TPoco Get(Guid? id)
         {
             return _repository.GetSingle(c => c.Id == id);
         }
