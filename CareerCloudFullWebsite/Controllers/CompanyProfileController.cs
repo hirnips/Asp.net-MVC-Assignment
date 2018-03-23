@@ -8,17 +8,21 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class CompanyProfileController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private CompanyProfileLogic companyProfileLogic = new CompanyProfileLogic(new EFGenericRepository<CompanyProfilePoco>());
+        CompanyProfilePoco[] compProfilePoco = new CompanyProfilePoco[1];
+
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: CompanyProfile
         public ActionResult Index()
         {
-            return View(db.CompanyProfiles.ToList());
+            return View(companyProfileLogic.GetAll().ToList());
         }
 
         // GET: CompanyProfile/Details/5
@@ -28,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyProfilePoco companyProfilePoco = db.CompanyProfiles.Find(id);
+            CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id);// db.CompanyProfiles.Find(id);
             if (companyProfilePoco == null)
             {
                 return HttpNotFound();
@@ -52,8 +56,9 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 companyProfilePoco.Id = Guid.NewGuid();
-                db.CompanyProfiles.Add(companyProfilePoco);
-                db.SaveChanges();
+                compProfilePoco[0] = companyProfilePoco;
+                companyProfileLogic.Add(compProfilePoco);
+
                 return RedirectToAction("Index");
             }
 
@@ -67,7 +72,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyProfilePoco companyProfilePoco = db.CompanyProfiles.Find(id);
+            CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id);// db.CompanyProfiles.Find(id);
             if (companyProfilePoco == null)
             {
                 return HttpNotFound();
@@ -84,8 +89,8 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(companyProfilePoco).State = EntityState.Modified;
-                db.SaveChanges();
+                compProfilePoco[0] = companyProfilePoco;
+                companyProfileLogic.Add(compProfilePoco);
                 return RedirectToAction("Index");
             }
             return View(companyProfilePoco);
@@ -98,7 +103,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyProfilePoco companyProfilePoco = db.CompanyProfiles.Find(id);
+            CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id); //db.CompanyProfiles.Find(id);
             if (companyProfilePoco == null)
             {
                 return HttpNotFound();
@@ -111,18 +116,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            CompanyProfilePoco companyProfilePoco = db.CompanyProfiles.Find(id);
-            db.CompanyProfiles.Remove(companyProfilePoco);
-            db.SaveChanges();
+            CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id); //db.CompanyProfiles.Find(id);
+            compProfilePoco[0] = companyProfilePoco;
+            companyProfileLogic.Add(compProfilePoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
