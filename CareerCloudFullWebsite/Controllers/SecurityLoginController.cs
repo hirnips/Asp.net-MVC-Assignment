@@ -8,17 +8,21 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class SecurityLoginController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private SecurityLoginLogic securityLoginLogic = new SecurityLoginLogic(new EFGenericRepository<SecurityLoginPoco>());
+        private SecurityLoginPoco[] secLoginPoco = new SecurityLoginPoco[1];
+
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: SecurityLogin
         public ActionResult Index()
         {
-            return View(db.SecurityLogins.ToList());
+            return View(securityLoginLogic.GetAll());//db.SecurityLogins.ToList());
         }
 
         // GET: SecurityLogin/Details/5
@@ -28,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginPoco securityLoginPoco = db.SecurityLogins.Find(id);
+            SecurityLoginPoco securityLoginPoco = securityLoginLogic.Get(id); //db.SecurityLogins.Find(id);
             if (securityLoginPoco == null)
             {
                 return HttpNotFound();
@@ -52,8 +56,10 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 securityLoginPoco.Id = Guid.NewGuid();
-                db.SecurityLogins.Add(securityLoginPoco);
-                db.SaveChanges();
+                secLoginPoco[0] = securityLoginPoco;
+                securityLoginLogic.Add(secLoginPoco);
+                //db.SecurityLogins.Add(securityLoginPoco);
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -67,7 +73,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginPoco securityLoginPoco = db.SecurityLogins.Find(id);
+            SecurityLoginPoco securityLoginPoco = securityLoginLogic.Get(id); //db.SecurityLogins.Find(id);
             if (securityLoginPoco == null)
             {
                 return HttpNotFound();
@@ -84,8 +90,10 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(securityLoginPoco).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.Entry(securityLoginPoco).State = EntityState.Modified;
+                //db.SaveChanges();
+                secLoginPoco[0] = securityLoginPoco;
+                securityLoginLogic.Update(secLoginPoco);
                 return RedirectToAction("Index");
             }
             return View(securityLoginPoco);
@@ -98,7 +106,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginPoco securityLoginPoco = db.SecurityLogins.Find(id);
+            SecurityLoginPoco securityLoginPoco = securityLoginLogic.Get(id); //db.SecurityLogins.Find(id);
             if (securityLoginPoco == null)
             {
                 return HttpNotFound();
@@ -111,18 +119,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            SecurityLoginPoco securityLoginPoco = db.SecurityLogins.Find(id);
-            db.SecurityLogins.Remove(securityLoginPoco);
-            db.SaveChanges();
+            SecurityLoginPoco securityLoginPoco = securityLoginLogic.Get(id); //db.SecurityLogins.Find(id);
+            secLoginPoco[0] = securityLoginPoco;
+            securityLoginLogic.Delete(secLoginPoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }

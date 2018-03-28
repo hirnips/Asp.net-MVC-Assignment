@@ -8,17 +8,20 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class SecurityLoginsRoleController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private SecurityLoginsRoleLogic securityLoginsRoleLogic = new SecurityLoginsRoleLogic(new EFGenericRepository<SecurityLoginsRolePoco>());
+        SecurityLoginsRolePoco[] secLoginsRolePoco = new SecurityLoginsRolePoco[1];
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: SecurityLoginsRole
         public ActionResult Index()
         {
-            var securityLoginsRoles = db.SecurityLoginsRoles.Include(s => s.SecurityLogin).Include(s => s.SecurityRole);
+            var securityLoginsRoles = securityLoginsRoleLogic.GetAll(); //db.SecurityLoginsRoles.Include(s => s.SecurityLogin).Include(s => s.SecurityRole);
             return View(securityLoginsRoles.ToList());
         }
 
@@ -29,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsRolePoco securityLoginsRolePoco = db.SecurityLoginsRoles.Find(id);
+            SecurityLoginsRolePoco securityLoginsRolePoco = securityLoginsRoleLogic.Get(id); //db.SecurityLoginsRoles.Find(id);
             if (securityLoginsRolePoco == null)
             {
                 return HttpNotFound();
@@ -40,8 +43,8 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: SecurityLoginsRole/Create
         public ActionResult Create()
         {
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login");
-            ViewBag.Role = new SelectList(db.SecurityRoles, "Id", "Role");
+            ViewBag.Login = new SelectList(securityLoginsRoleLogic.GetAll(), "Login", "Login");
+            ViewBag.Role = new SelectList(securityLoginsRoleLogic.GetAll(), "Role", "Role");
             return View();
         }
 
@@ -55,13 +58,13 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 securityLoginsRolePoco.Id = Guid.NewGuid();
-                db.SecurityLoginsRoles.Add(securityLoginsRolePoco);
-                db.SaveChanges();
+                secLoginsRolePoco[0] = securityLoginsRolePoco;
+                securityLoginsRoleLogic.Add(secLoginsRolePoco);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", securityLoginsRolePoco.Login);
-            ViewBag.Role = new SelectList(db.SecurityRoles, "Id", "Role", securityLoginsRolePoco.Role);
+            ViewBag.Login = new SelectList(securityLoginsRoleLogic.GetAll(), "Login", "Login");
+            ViewBag.Role = new SelectList(securityLoginsRoleLogic.GetAll(), "Role", "Role");
             return View(securityLoginsRolePoco);
         }
 
@@ -72,13 +75,13 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsRolePoco securityLoginsRolePoco = db.SecurityLoginsRoles.Find(id);
+            SecurityLoginsRolePoco securityLoginsRolePoco = securityLoginsRoleLogic.Get(id); //db.SecurityLoginsRoles.Find(id);
             if (securityLoginsRolePoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", securityLoginsRolePoco.Login);
-            ViewBag.Role = new SelectList(db.SecurityRoles, "Id", "Role", securityLoginsRolePoco.Role);
+            ViewBag.Login = new SelectList(securityLoginsRoleLogic.GetAll(), "Login", "Login");
+            ViewBag.Role = new SelectList(securityLoginsRoleLogic.GetAll(), "Role", "Role");
             return View(securityLoginsRolePoco);
         }
 
@@ -91,12 +94,12 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(securityLoginsRolePoco).State = EntityState.Modified;
-                db.SaveChanges();
+                secLoginsRolePoco[0] = securityLoginsRolePoco;
+                securityLoginsRoleLogic.Update(secLoginsRolePoco);
                 return RedirectToAction("Index");
             }
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", securityLoginsRolePoco.Login);
-            ViewBag.Role = new SelectList(db.SecurityRoles, "Id", "Role", securityLoginsRolePoco.Role);
+            ViewBag.Login = new SelectList(securityLoginsRoleLogic.GetAll(), "Login", "Login");
+            ViewBag.Role = new SelectList(securityLoginsRoleLogic.GetAll(), "Role", "Role");
             return View(securityLoginsRolePoco);
         }
 
@@ -107,7 +110,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsRolePoco securityLoginsRolePoco = db.SecurityLoginsRoles.Find(id);
+            SecurityLoginsRolePoco securityLoginsRolePoco = securityLoginsRoleLogic.Get(id); //db.SecurityLoginsRoles.Find(id);
             if (securityLoginsRolePoco == null)
             {
                 return HttpNotFound();
@@ -120,18 +123,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            SecurityLoginsRolePoco securityLoginsRolePoco = db.SecurityLoginsRoles.Find(id);
-            db.SecurityLoginsRoles.Remove(securityLoginsRolePoco);
-            db.SaveChanges();
+            SecurityLoginsRolePoco securityLoginsRolePoco = securityLoginsRoleLogic.Get(id); //db.SecurityLoginsRoles.Find(id);
+            secLoginsRolePoco[0] = securityLoginsRolePoco;
+            securityLoginsRoleLogic.Delete(secLoginsRolePoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }

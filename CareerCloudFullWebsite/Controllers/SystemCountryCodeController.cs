@@ -8,17 +8,20 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class SystemCountryCodeController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private EFGenericRepository<SystemCountryCodePoco> systemCountryCodeLogic = new EFGenericRepository<SystemCountryCodePoco>();
+
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: SystemCountryCode
         public ActionResult Index()
         {
-            return View(db.SystemCountryCodes.ToList());
+            return View(systemCountryCodeLogic.GetAll());//db.SystemCountryCodes.ToList());
         }
 
         // GET: SystemCountryCode/Details/5
@@ -28,7 +31,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SystemCountryCodePoco systemCountryCodePoco = db.SystemCountryCodes.Find(id);
+            SystemCountryCodePoco systemCountryCodePoco = systemCountryCodeLogic.GetSingle(c => c.Code == id); //db.SystemCountryCodes.Find(id);
             if (systemCountryCodePoco == null)
             {
                 return HttpNotFound();
@@ -51,8 +54,8 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.SystemCountryCodes.Add(systemCountryCodePoco);
-                db.SaveChanges();
+                SystemCountryCodePoco[] systemCountryCodes = new SystemCountryCodePoco[] { systemCountryCodePoco };
+                systemCountryCodeLogic.Add(systemCountryCodes);
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +69,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SystemCountryCodePoco systemCountryCodePoco = db.SystemCountryCodes.Find(id);
+            SystemCountryCodePoco systemCountryCodePoco = systemCountryCodeLogic.GetSingle(c => c.Code == id);
             if (systemCountryCodePoco == null)
             {
                 return HttpNotFound();
@@ -83,8 +86,8 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(systemCountryCodePoco).State = EntityState.Modified;
-                db.SaveChanges();
+                SystemCountryCodePoco[] systemCountryCodes = new SystemCountryCodePoco[] { systemCountryCodePoco };
+                systemCountryCodeLogic.Update(systemCountryCodes);
                 return RedirectToAction("Index");
             }
             return View(systemCountryCodePoco);
@@ -97,7 +100,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SystemCountryCodePoco systemCountryCodePoco = db.SystemCountryCodes.Find(id);
+            SystemCountryCodePoco systemCountryCodePoco = systemCountryCodeLogic.GetSingle(c => c.Code == id);
             if (systemCountryCodePoco == null)
             {
                 return HttpNotFound();
@@ -110,18 +113,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            SystemCountryCodePoco systemCountryCodePoco = db.SystemCountryCodes.Find(id);
-            db.SystemCountryCodes.Remove(systemCountryCodePoco);
-            db.SaveChanges();
+            SystemCountryCodePoco systemCountryCodePoco = systemCountryCodeLogic.GetSingle(c => c.Code == id);
+            SystemCountryCodePoco[] systemCountryCodes = new SystemCountryCodePoco[] { systemCountryCodePoco };
+            systemCountryCodeLogic.Remove(systemCountryCodes);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }

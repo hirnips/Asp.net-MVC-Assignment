@@ -8,17 +8,19 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class SystemLanguageCodeController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private EFGenericRepository<SystemLanguageCodePoco> systemLanguageLogic = new EFGenericRepository<SystemLanguageCodePoco>(); 
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: SystemLanguageCode
         public ActionResult Index()
         {
-            return View(db.SystemLanguageCodes.ToList());
+            return View(systemLanguageLogic.GetAll());//db.SystemLanguageCodes.ToList());
         }
 
         // GET: SystemLanguageCode/Details/5
@@ -28,7 +30,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SystemLanguageCodePoco systemLanguageCodePoco = db.SystemLanguageCodes.Find(id);
+            SystemLanguageCodePoco systemLanguageCodePoco = systemLanguageLogic.GetSingle(l => l.LanguageID == id); //db.SystemLanguageCodes.Find(id);
             if (systemLanguageCodePoco == null)
             {
                 return HttpNotFound();
@@ -51,8 +53,9 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.SystemLanguageCodes.Add(systemLanguageCodePoco);
-                db.SaveChanges();
+                SystemLanguageCodePoco[] systemLangPoco = new SystemLanguageCodePoco[] { systemLanguageCodePoco };
+                systemLanguageLogic.Add(systemLangPoco);
+                
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +69,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SystemLanguageCodePoco systemLanguageCodePoco = db.SystemLanguageCodes.Find(id);
+            SystemLanguageCodePoco systemLanguageCodePoco = systemLanguageLogic.GetSingle(l => l.LanguageID == id); //db.SystemLanguageCodes.Find(id);
             if (systemLanguageCodePoco == null)
             {
                 return HttpNotFound();
@@ -83,8 +86,8 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(systemLanguageCodePoco).State = EntityState.Modified;
-                db.SaveChanges();
+                SystemLanguageCodePoco[] systemLangPoco = new SystemLanguageCodePoco[] { systemLanguageCodePoco };
+                systemLanguageLogic.Update(systemLangPoco);
                 return RedirectToAction("Index");
             }
             return View(systemLanguageCodePoco);
@@ -97,7 +100,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SystemLanguageCodePoco systemLanguageCodePoco = db.SystemLanguageCodes.Find(id);
+            SystemLanguageCodePoco systemLanguageCodePoco = systemLanguageLogic.GetSingle(l => l.LanguageID == id); //db.SystemLanguageCodes.Find(id);
             if (systemLanguageCodePoco == null)
             {
                 return HttpNotFound();
@@ -110,18 +113,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            SystemLanguageCodePoco systemLanguageCodePoco = db.SystemLanguageCodes.Find(id);
-            db.SystemLanguageCodes.Remove(systemLanguageCodePoco);
-            db.SaveChanges();
+            SystemLanguageCodePoco systemLanguageCodePoco = systemLanguageLogic.GetSingle(l => l.LanguageID == id); //db.SystemLanguageCodes.Find(id);
+            SystemLanguageCodePoco[] systemLangPoco = new SystemLanguageCodePoco[] { systemLanguageCodePoco };
+            systemLanguageLogic.Remove(systemLangPoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }

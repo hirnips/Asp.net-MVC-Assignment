@@ -8,17 +8,20 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class SecurityLoginsLogController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private SecurityLoginsLogLogic securityLoginsLogLogic = new SecurityLoginsLogLogic(new EFGenericRepository<SecurityLoginsLogPoco>());
+        SecurityLoginsLogPoco[] secLoginLogPoco = new SecurityLoginsLogPoco[1];
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: SecurityLoginsLog
         public ActionResult Index()
         {
-            var securityLoginsLogs = db.SecurityLoginsLogs.Include(s => s.SecurityLogin);
+            var securityLoginsLogs = securityLoginsLogLogic.GetAll(); //db.SecurityLoginsLogs.Include(s => s.SecurityLogin);
             return View(securityLoginsLogs.ToList());
         }
 
@@ -29,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsLogPoco securityLoginsLogPoco = db.SecurityLoginsLogs.Find(id);
+            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id);// db.SecurityLoginsLogs.Find(id);
             if (securityLoginsLogPoco == null)
             {
                 return HttpNotFound();
@@ -40,7 +43,7 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: SecurityLoginsLog/Create
         public ActionResult Create()
         {
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login");
+            ViewBag.Login = new SelectList(securityLoginsLogLogic.GetAll(), "Login", "Login");
             return View();
         }
 
@@ -54,12 +57,12 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 securityLoginsLogPoco.Id = Guid.NewGuid();
-                db.SecurityLoginsLogs.Add(securityLoginsLogPoco);
-                db.SaveChanges();
+                secLoginLogPoco[0] = securityLoginsLogPoco;
+                securityLoginsLogLogic.Add(secLoginLogPoco);
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", securityLoginsLogPoco.Login);
+            ViewBag.Login = new SelectList(securityLoginsLogLogic.GetAll(), "Login", "Login");
             return View(securityLoginsLogPoco);
         }
 
@@ -70,12 +73,12 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsLogPoco securityLoginsLogPoco = db.SecurityLoginsLogs.Find(id);
+            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id); //db.SecurityLoginsLogs.Find(id);
             if (securityLoginsLogPoco == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", securityLoginsLogPoco.Login);
+            ViewBag.Login = new SelectList(securityLoginsLogLogic.GetAll(), "Login", "Login");
             return View(securityLoginsLogPoco);
         }
 
@@ -88,11 +91,11 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(securityLoginsLogPoco).State = EntityState.Modified;
-                db.SaveChanges();
+                secLoginLogPoco[0] = securityLoginsLogPoco;
+                securityLoginsLogLogic.Update(secLoginLogPoco);
                 return RedirectToAction("Index");
             }
-            ViewBag.Login = new SelectList(db.SecurityLogins, "Id", "Login", securityLoginsLogPoco.Login);
+            ViewBag.Login = new SelectList(securityLoginsLogLogic.GetAll(), "Login", "Login");
             return View(securityLoginsLogPoco);
         }
 
@@ -103,7 +106,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsLogPoco securityLoginsLogPoco = db.SecurityLoginsLogs.Find(id);
+            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id); //db.SecurityLoginsLogs.Find(id);
             if (securityLoginsLogPoco == null)
             {
                 return HttpNotFound();
@@ -116,18 +119,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            SecurityLoginsLogPoco securityLoginsLogPoco = db.SecurityLoginsLogs.Find(id);
-            db.SecurityLoginsLogs.Remove(securityLoginsLogPoco);
-            db.SaveChanges();
+            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id); //db.SecurityLoginsLogs.Find(id);
+            secLoginLogPoco[0] = securityLoginsLogPoco;
+            securityLoginsLogLogic.Delete(secLoginLogPoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }

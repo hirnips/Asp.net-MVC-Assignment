@@ -8,17 +8,21 @@ using System.Web;
 using System.Web.Mvc;
 using CareerCloud.EntityFrameworkDataAccess;
 using CareerCloud.Pocos;
+using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
     public class SecurityRoleController : Controller
     {
-        private CareerCloudContext db = new CareerCloudContext();
+        private SecurityRoleLogic securityRoleLogic = new SecurityRoleLogic(new EFGenericRepository<SecurityRolePoco>());
+        SecurityRolePoco[] secRolePoco = new SecurityRolePoco[1];
+
+        //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: SecurityRole
         public ActionResult Index()
         {
-            return View(db.SecurityRoles.ToList());
+            return View(securityRoleLogic.GetAll());
         }
 
         // GET: SecurityRole/Details/5
@@ -28,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityRolePoco securityRolePoco = db.SecurityRoles.Find(id);
+            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id); //db.SecurityRoles.Find(id);
             if (securityRolePoco == null)
             {
                 return HttpNotFound();
@@ -52,8 +56,8 @@ namespace CareerCloudFullWebsite.Controllers
             if (ModelState.IsValid)
             {
                 securityRolePoco.Id = Guid.NewGuid();
-                db.SecurityRoles.Add(securityRolePoco);
-                db.SaveChanges();
+                secRolePoco[0] = securityRolePoco;
+                securityRoleLogic.Add(secRolePoco);
                 return RedirectToAction("Index");
             }
 
@@ -67,7 +71,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityRolePoco securityRolePoco = db.SecurityRoles.Find(id);
+            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id); //db.SecurityRoles.Find(id);
             if (securityRolePoco == null)
             {
                 return HttpNotFound();
@@ -84,8 +88,8 @@ namespace CareerCloudFullWebsite.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(securityRolePoco).State = EntityState.Modified;
-                db.SaveChanges();
+                secRolePoco[0] = securityRolePoco;
+                securityRoleLogic.Update(secRolePoco);
                 return RedirectToAction("Index");
             }
             return View(securityRolePoco);
@@ -98,7 +102,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityRolePoco securityRolePoco = db.SecurityRoles.Find(id);
+            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id); //db.SecurityRoles.Find(id);
             if (securityRolePoco == null)
             {
                 return HttpNotFound();
@@ -111,18 +115,18 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            SecurityRolePoco securityRolePoco = db.SecurityRoles.Find(id);
-            db.SecurityRoles.Remove(securityRolePoco);
-            db.SaveChanges();
+            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id); //db.SecurityRoles.Find(id);
+            secRolePoco[0] = securityRolePoco;
+            securityRoleLogic.Delete(secRolePoco);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            //if (disposing)
+            //{
+            //    db.Dispose();
+            //}
             base.Dispose(disposing);
         }
     }
