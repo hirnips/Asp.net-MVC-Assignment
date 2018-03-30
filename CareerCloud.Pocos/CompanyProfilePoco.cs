@@ -17,18 +17,26 @@ namespace CareerCloud.Pocos
 
         [Column("Registration_Date")]
         [Required]
+        [Display(Name = "Registration Date")]
         public DateTime RegistrationDate { get; set; }
 
         [Column("Company_Website")]
+        [Display(Name = "Company Website")]
+        [Required]
         public string CompanyWebsite { get; set; }
 
         [Column("Contact_Phone")]
+        [Display(Name = "Contact Phone")]
+        [Required]
         public string ContactPhone { get; set; }
 
         [Column("Contact_Name")]
+        [Display(Name = "Contact Name")]
+        [Required]
         public string ContactName { get; set; }
 
         [Column("Company_Logo")]
+        [Display(Name = "Company Logo")]
         public Byte[] CompanyLogo { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

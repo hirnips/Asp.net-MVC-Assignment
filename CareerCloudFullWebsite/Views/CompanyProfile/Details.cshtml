@@ -4,10 +4,10 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Company Details</h2>
 
 <div>
-    <h4>CompanyProfilePoco</h4>
+    <h4>@Model.CompanyDescriptions.FirstOrDefault().CompanyName</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -42,13 +42,13 @@
             @Html.DisplayFor(model => model.ContactName)
         </dd>
 
-        <dt>
+        @*<dt>
             @Html.DisplayNameFor(model => model.CompanyLogo)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.CompanyLogo)
-        </dd>
+        </dd>*@
 
         <dt>
             @Html.DisplayNameFor(model => model.TimeStamp)
@@ -57,8 +57,53 @@
         <dd>
             @Html.DisplayFor(model => model.TimeStamp)
         </dd>
-
     </dl>
+</div>
+
+<div>
+    <h2>Job Details of @Model.CompanyDescriptions.FirstOrDefault().CompanyName</h2>
+    @if (Model.CompanyJobs.Count > 0)
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("Job Title")
+                </th>
+                <th>
+                    @Html.DisplayName("Job Descriptionn")
+                </th>
+                <th>
+                    @Html.DisplayName("Job Created")
+                </th>
+                <th>
+                    @Html.DisplayName("Is Inactive")
+                </th>
+            </tr>
+            @foreach (var item in Model.CompanyJobs)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobDescriptions)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProfileCreated)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsInactive)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
+    else
+    {
+        <p>There is no jobs posted by @Model.CompanyDescriptions.FirstOrDefault().CompanyName</p>
+    }
+
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

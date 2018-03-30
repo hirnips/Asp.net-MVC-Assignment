@@ -14,7 +14,10 @@ namespace CareerCloudFullWebsite.Controllers
 {
     public class CompanyProfileController : Controller
     {
+        private CompanyLogic companyLogic = new CompanyLogic();
         private CompanyProfileLogic companyProfileLogic = new CompanyProfileLogic(new EFGenericRepository<CompanyProfilePoco>());
+        private EFGenericRepository<SystemLanguageCodePoco> systemLanguageCodeLogic = new EFGenericRepository<SystemLanguageCodePoco>();
+        private CompanyDescriptionLogic companyDescriptionLogic = new CompanyDescriptionLogic(new EFGenericRepository<CompanyDescriptionPoco>());
         CompanyProfilePoco[] compProfilePoco = new CompanyProfilePoco[1];
 
         //private CareerCloudContext db = new CareerCloudContext();
@@ -26,13 +29,15 @@ namespace CareerCloudFullWebsite.Controllers
         }
 
         // GET: CompanyProfile/Details/5
-        public ActionResult Details(Guid? id)
+        public ActionResult Details(Guid id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id);// db.CompanyProfiles.Find(id);
+
+            CompanyProfilePoco companyProfilePoco = companyLogic.GetJobDescription(id); //companyProfileLogic.Get(Guid.Parse(id));// db.CompanyProfiles.Find(id);
             if (companyProfilePoco == null)
             {
                 return HttpNotFound();
@@ -43,6 +48,7 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: CompanyProfile/Create
         public ActionResult Create()
         {
+            ViewBag.LanguageId = new SelectList(systemLanguageCodeLogic.GetAll(), "LanguageID", "Name");
             return View();
         }
 
@@ -51,7 +57,7 @@ namespace CareerCloudFullWebsite.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,RegistrationDate,CompanyWebsite,ContactPhone,ContactName,CompanyLogo,TimeStamp")] CompanyProfilePoco companyProfilePoco)
+        public ActionResult Create([Bind(Include = "Id,RegistrationDate,CompanyWebsite,ContactPhone,ContactName,CompanyLogo,TimeStamp")] CompanyProfilePoco companyProfilePoco, string LanguageId, string CompanyName, string CompanyDescription)
         {
             if (ModelState.IsValid)
             {
@@ -59,20 +65,34 @@ namespace CareerCloudFullWebsite.Controllers
                 compProfilePoco[0] = companyProfilePoco;
                 companyProfileLogic.Add(compProfilePoco);
 
-                return RedirectToAction("Index");
+                
+                CompanyDescriptionPoco companyDescriptionPoco = new CompanyDescriptionPoco();
+                companyDescriptionPoco.Id = Guid.NewGuid();
+                companyDescriptionPoco.Company = companyProfilePoco.Id;
+                companyDescriptionPoco.LanguageId = LanguageId;
+                companyDescriptionPoco.CompanyName = CompanyName;
+                companyDescriptionPoco.CompanyDescription = CompanyDescription;
+                CompanyDescriptionPoco[] companyDescriptionPocos = new CompanyDescriptionPoco[]{
+                    companyDescriptionPoco
+                };
+                companyDescriptionLogic.Add(companyDescriptionPocos);
+
+
+                ViewBag.LanguageId = new SelectList(systemLanguageCodeLogic.GetAll(), "LanguageId", "Name", companyDescriptionPoco.LanguageId);
+                return RedirectToAction("Details", new { id = companyProfilePoco.Id });
             }
 
             return View(companyProfilePoco);
         }
 
         // GET: CompanyProfile/Edit/5
-        public ActionResult Edit(Guid? id)
+        public ActionResult Edit(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id);// db.CompanyProfiles.Find(id);
+            CompanyProfilePoco companyProfilePoco = companyLogic.GetJobDescription(id);// db.CompanyProfiles.Find(id);
             if (companyProfilePoco == null)
             {
                 return HttpNotFound();
@@ -97,13 +117,13 @@ namespace CareerCloudFullWebsite.Controllers
         }
 
         // GET: CompanyProfile/Delete/5
-        public ActionResult Delete(Guid? id)
+        public ActionResult Delete(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id); //db.CompanyProfiles.Find(id);
+            CompanyProfilePoco companyProfilePoco = companyLogic.GetJobDescription(id); //db.CompanyProfiles.Find(id);
             if (companyProfilePoco == null)
             {
                 return HttpNotFound();
@@ -116,9 +136,13 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-            CompanyProfilePoco companyProfilePoco = companyProfileLogic.Get(id); //db.CompanyProfiles.Find(id);
-            compProfilePoco[0] = companyProfilePoco;
-            companyProfileLogic.Delete(compProfilePoco);
+            //CompanyProfilePoco companyProfilePoco = companyLogic.GetJobDescription(id);
+            //CompanyDescriptionPoco companyDescriptionPoco = new CompanyDescriptionPoco();
+
+            //compProfilePoco[0] = companyProfilePoco;
+            //companyProfileLogic.Delete(compProfilePoco);
+            CompanyLogic companyLogic = new CompanyLogic();
+            companyLogic.DeleteJobDescription(id);
             return RedirectToAction("Index");
         }
 
