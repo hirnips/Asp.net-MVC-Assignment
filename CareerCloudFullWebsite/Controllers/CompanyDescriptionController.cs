@@ -33,7 +33,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id); //db.CompanyDescriptions.Find(id);
+            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id.Value); //db.CompanyDescriptions.Find(id);
             if (companyDescriptionPoco == null)
             {
                 return HttpNotFound();
@@ -76,7 +76,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id); //db.CompanyDescriptions.Find(id);
+            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id.Value); //db.CompanyDescriptions.Find(id);
             if (companyDescriptionPoco == null)
             {
                 return HttpNotFound();
@@ -111,7 +111,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id); //db.CompanyDescriptions.Find(id);
+            CompanyDescriptionPoco companyDescriptionPoco = companyDescriptionLogic.Get(id.Value); //db.CompanyDescriptions.Find(id);
             if (companyDescriptionPoco == null)
             {
                 return HttpNotFound();

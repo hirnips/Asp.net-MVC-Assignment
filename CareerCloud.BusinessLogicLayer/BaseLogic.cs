@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CareerCloud.Pocos;
 using CareerCloud.DataAccessLayer;
+using System.Linq.Expressions;
 
 namespace CareerCloud.BusinessLogicLayer
 {
@@ -23,9 +24,9 @@ namespace CareerCloud.BusinessLogicLayer
             return;
         }
 
-        public virtual TPoco Get(Guid? id)
+        public virtual TPoco Get(Guid id, params Expression<Func<TPoco, object>>[] navigationProperties)
         {
-            return _repository.GetSingle(c => c.Id == id);
+            return _repository.GetSingle(c => c.Id == id, navigationProperties);
         }
 
         public virtual List<TPoco> GetAll()

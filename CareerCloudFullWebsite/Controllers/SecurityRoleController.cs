@@ -32,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id); //db.SecurityRoles.Find(id);
+            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id.Value); //db.SecurityRoles.Find(id);
             if (securityRolePoco == null)
             {
                 return HttpNotFound();
@@ -71,7 +71,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id); //db.SecurityRoles.Find(id);
+            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id.Value); //db.SecurityRoles.Find(id);
             if (securityRolePoco == null)
             {
                 return HttpNotFound();
@@ -102,7 +102,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id); //db.SecurityRoles.Find(id);
+            SecurityRolePoco securityRolePoco = securityRoleLogic.Get(id.Value); //db.SecurityRoles.Find(id);
             if (securityRolePoco == null)
             {
                 return HttpNotFound();

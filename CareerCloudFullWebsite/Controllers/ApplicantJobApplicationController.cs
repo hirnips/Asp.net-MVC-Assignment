@@ -16,6 +16,7 @@ namespace CareerCloudFullWebsite.Controllers
     {
         private ApplicantJobApplicationLogic applicantJobApplicationLogic = new ApplicantJobApplicationLogic(new EFGenericRepository<ApplicantJobApplicationPoco>());
         ApplicantJobApplicationPoco[] appJobAppPoco = new ApplicantJobApplicationPoco[1];
+        ApplicantLogic applicantLogic = new ApplicantLogic();
 
         //private CareerCloudContext db = new CareerCloudContext();
 
@@ -27,13 +28,17 @@ namespace CareerCloudFullWebsite.Controllers
         }
 
         // GET: ApplicantJobApplication/Details/5
-        public ActionResult Details(Guid? id)
+        public ActionResult Details(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
+            //ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
+            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantLogic.GetApplicantJobApplication(id);
+            ViewBag.ApplicantName = applicantLogic.GetApplicantName(id).FullName;
+            ViewBag.Job = applicantLogic.GetApplicantJob(id).FirstOrDefault().JobName;
+
             if (applicantJobApplicationPoco == null)
             {
                 return HttpNotFound();
@@ -77,7 +82,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
+            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id.Value); //db.ApplicantJobApplications.Find(id);
             if (applicantJobApplicationPoco == null)
             {
                 return HttpNotFound();
@@ -113,7 +118,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
+            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id.Value); //db.ApplicantJobApplications.Find(id);
             if (applicantJobApplicationPoco == null)
             {
                 return HttpNotFound();

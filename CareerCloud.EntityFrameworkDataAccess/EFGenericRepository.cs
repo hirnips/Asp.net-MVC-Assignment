@@ -45,7 +45,7 @@ namespace CareerCloud.EntityFrameworkDataAccess
         }
        
 
-        public IList<T> GetList(Expression<Func<T, bool>> where, params Expression<Func<T, object>>[] navigationProperties)
+        public IList<T> GetList(Func<T, bool> where, params Expression<Func<T, object>>[] navigationProperties)
         {
             IQueryable<T> dbQuery = _context.Set<T>();
             foreach (var navprop in navigationProperties)
@@ -57,7 +57,7 @@ namespace CareerCloud.EntityFrameworkDataAccess
         }
 
        
-        public T GetSingle(Expression<Func<T, bool>> where, params Expression<Func<T, object>>[] navigationProperties)
+        public T GetSingle(Func<T, bool> where, params Expression<Func<T, object>>[] navigationProperties)
         {
             IQueryable<T> dbQuery = _context.Set<T>();
             foreach (Expression<Func<T, object>> navprop in navigationProperties)
@@ -65,6 +65,7 @@ namespace CareerCloud.EntityFrameworkDataAccess
                 dbQuery = dbQuery.Include<T, object>(navprop);
             }
             return dbQuery.FirstOrDefault(where);
+            
         }
 
         public void Remove(params T[] items)

@@ -16,7 +16,7 @@ namespace CareerCloudFullWebsite.Controllers
     {
         private CompanyLogic companyLogic = new CompanyLogic();
         private CompanyProfileLogic companyProfileLogic = new CompanyProfileLogic(new EFGenericRepository<CompanyProfilePoco>());
-        private EFGenericRepository<SystemLanguageCodePoco> systemLanguageCodeLogic = new EFGenericRepository<SystemLanguageCodePoco>();
+        //private EFGenericRepository<SystemLanguageCodePoco> systemLanguageCodeLogic = new EFGenericRepository<SystemLanguageCodePoco>();
         private CompanyDescriptionLogic companyDescriptionLogic = new CompanyDescriptionLogic(new EFGenericRepository<CompanyDescriptionPoco>());
         CompanyProfilePoco[] compProfilePoco = new CompanyProfilePoco[1];
 
@@ -48,7 +48,7 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: CompanyProfile/Create
         public ActionResult Create()
         {
-            ViewBag.LanguageId = new SelectList(systemLanguageCodeLogic.GetAll(), "LanguageID", "Name");
+            ViewBag.LanguageId = new SelectList(companyLogic.GetLanguage(), "LanguageID", "Name");
             return View();
         }
 
@@ -78,7 +78,7 @@ namespace CareerCloudFullWebsite.Controllers
                 companyDescriptionLogic.Add(companyDescriptionPocos);
 
 
-                ViewBag.LanguageId = new SelectList(systemLanguageCodeLogic.GetAll(), "LanguageId", "Name", companyDescriptionPoco.LanguageId);
+                ViewBag.LanguageId = new SelectList(companyLogic.GetLanguage(), "LanguageId", "Name", companyDescriptionPoco.LanguageId);
                 return RedirectToAction("Details", new { id = companyProfilePoco.Id });
             }
 

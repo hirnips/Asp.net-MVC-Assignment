@@ -18,6 +18,23 @@ namespace CareerCloudFullWebsite.Controllers
         ApplicantProfilePoco[] appProfilePoco = new ApplicantProfilePoco[1];
         //private CareerCloudContext db = new CareerCloudContext();
 
+
+        public ActionResult JobsApplied(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id.Value, n => n.ApplicantJobApplications); //db.ApplicantProfilePocos.Find(id);
+            if (applicantProfilePoco == null)
+            {
+                return HttpNotFound();
+            }
+            return View(applicantProfilePoco);
+        }
+
+
         // GET: ApplicantProfile
         public ActionResult Index()
         {
@@ -32,11 +49,13 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id); //db.ApplicantProfilePocos.Find(id);
+            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id.Value); //db.ApplicantProfilePocos.Find(id);
             if (applicantProfilePoco == null)
             {
                 return HttpNotFound();
             }
+
+
             return View(applicantProfilePoco);
         }
 
@@ -77,7 +96,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id); //db.ApplicantProfilePocos.Find(id);
+            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id.Value); //db.ApplicantProfilePocos.Find(id);
             if (applicantProfilePoco == null)
             {
                 return HttpNotFound();
@@ -112,7 +131,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id); //db.ApplicantProfilePocos.Find(id);
+            ApplicantProfilePoco applicantProfilePoco = applicantProfileLogic.Get(id.Value); //db.ApplicantProfilePocos.Find(id);
             if (applicantProfilePoco == null)
             {
                 return HttpNotFound();

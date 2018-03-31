@@ -32,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id);// db.SecurityLoginsLogs.Find(id);
+            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id.Value);// db.SecurityLoginsLogs.Find(id);
             if (securityLoginsLogPoco == null)
             {
                 return HttpNotFound();
@@ -73,7 +73,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id); //db.SecurityLoginsLogs.Find(id);
+            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id.Value); //db.SecurityLoginsLogs.Find(id);
             if (securityLoginsLogPoco == null)
             {
                 return HttpNotFound();
@@ -106,7 +106,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id); //db.SecurityLoginsLogs.Find(id);
+            SecurityLoginsLogPoco securityLoginsLogPoco = securityLoginsLogLogic.Get(id.Value); //db.SecurityLoginsLogs.Find(id);
             if (securityLoginsLogPoco == null)
             {
                 return HttpNotFound();

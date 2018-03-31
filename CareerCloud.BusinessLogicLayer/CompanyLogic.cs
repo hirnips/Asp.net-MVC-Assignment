@@ -46,7 +46,7 @@ namespace CareerCloud.BusinessLogicLayer
         public void DeleteJobDescription(Guid ID)
         {
             companyDescriptionRepo = new EFGenericRepository<CompanyDescriptionPoco>();
-           
+
 
             CompanyDescriptionPoco companyDescriptionPoco = new CompanyDescriptionPoco();
             companyDescriptionPoco = companyDescriptionRepo.GetSingle(c => c.Company.Equals(ID));
@@ -54,7 +54,7 @@ namespace CareerCloud.BusinessLogicLayer
             {
                 companyDescriptionPoco
             };
-           
+
             companyDescriptionRepo.Remove(CompanyDescriptionPocos);
 
 
@@ -64,9 +64,16 @@ namespace CareerCloud.BusinessLogicLayer
             CompanyProfilePoco[] companyProfilePocos = new CompanyProfilePoco[]
             {
                 companyProfilePoco
-            };            
+            };
             companyProfileRepo.Remove(companyProfilePocos);
+        }
+
+        public List<SystemLanguageCodePoco> GetLanguage()
+        {
+            EFGenericRepository<SystemLanguageCodePoco> systemLanguageCodeLogic = new EFGenericRepository<SystemLanguageCodePoco>();
+            return systemLanguageCodeLogic.GetAll().ToList();
         }
 
     }
 }
+

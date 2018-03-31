@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ApplicantEducationLogic.cs" />
     <Compile Include="ApplicantJobApplicationLogic.cs" />
+    <Compile Include="ApplicantLogic.cs" />
     <Compile Include="ApplicantProfileLogic.cs" />
     <Compile Include="ApplicantResumeLogic.cs" />
     <Compile Include="ApplicantSkillLogic.cs" />

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using CareerCloud.Pocos;
+using System.Diagnostics;
 
 namespace CareerCloud.EntityFrameworkDataAccess
 {
@@ -13,6 +14,7 @@ namespace CareerCloud.EntityFrameworkDataAccess
     {
         public CareerCloudContext() : base(ConfigurationManager.ConnectionStrings["dbConnection"].ConnectionString)
         {
+            Database.Log = s=> Debug.Write(s);
         }
          
         public DbSet<ApplicantEducationPoco> ApplicantEducations { get; set; }

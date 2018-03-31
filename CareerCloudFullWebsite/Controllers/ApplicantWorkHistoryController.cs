@@ -32,7 +32,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id); //db.ApplicantWorkHistorys.Find(id);
+            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id.Value); //db.ApplicantWorkHistorys.Find(id);
             if (applicantWorkHistoryPoco == null)
             {
                 return HttpNotFound();
@@ -76,7 +76,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id);//db.ApplicantWorkHistorys.Find(id);
+            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id.Value);//db.ApplicantWorkHistorys.Find(id);
             if (applicantWorkHistoryPoco == null)
             {
                 return HttpNotFound();
@@ -112,7 +112,7 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id); //db.ApplicantWorkHistorys.Find(id);
+            ApplicantWorkHistoryPoco applicantWorkHistoryPoco = applicantWorkHistoryLogic.Get(id.Value); //db.ApplicantWorkHistorys.Find(id);
             if (applicantWorkHistoryPoco == null)
             {
                 return HttpNotFound();
