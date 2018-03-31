@@ -25,22 +25,27 @@ namespace CareerCloud.Pocos
         
         [Column("Skill_Level")]
         [Required]
+        [Display(Name = "Skill Level")]
         public string SkillLevel { get; set; }
 
         [Column("Start_Month")]
         [Required]
+        [Display(Name = "Start Month")]
         public Byte StartMonth { get; set; }
 
         [Column("Start_Year")]
         [Required]
+        [Display(Name = "Start Year")]
         public int StartYear { get; set; }
 
         [Column("End_Month")]
         [Required]
+        [Display(Name = "End Month")]
         public Byte EndMonth { get; set; }
 
         [Column("End_Year")]
         [Required]
+        [Display(Name = "End Year")]
         public int EndYear { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

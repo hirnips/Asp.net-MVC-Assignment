@@ -20,9 +20,11 @@ namespace CareerCloud.Pocos
         public Guid Job { get; set; }
 
         [Column("Job_Name")]
+        [Display(Name = "Job Name")]
         public string JobName { get; set; }
 
         [Column("Job_Descriptions")]
+        [Display(Name = "Job Descriptions")]
         //public string JobDescription { get; set; }
         public string JobDescriptions { get; set; }
 

@@ -25,10 +25,12 @@ namespace CareerCloud.Pocos
 
         [Column("Company_Name")]
         [Required]
+        [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
 
         [Column("Company_Description")]
         [Required]
+        [Display(Name = "Company Description")]
         public string CompanyDescription { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

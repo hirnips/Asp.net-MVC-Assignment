@@ -20,14 +20,17 @@ namespace CareerCloud.Pocos
 
         [Column("Source_IP")]
         [Required]
+        [Display(Name = "Source IP")]
         public string SourceIP { get; set; }
 
         [Column("Logon_Date")]
         [Required]
+        [Display(Name = "Logon Date")]
         public DateTime LogonDate { get; set; }
 
         [Column("Is_Succesful")]
         [Required]
+        [Display(Name = "Is Succesful")]
         public Boolean IsSuccesful { get; set; }
         public virtual SecurityLoginPoco SecurityLogin { get; set; }
     }

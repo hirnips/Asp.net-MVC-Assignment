@@ -20,9 +20,11 @@ namespace CareerCloud.Pocos
         public Guid Login { get; set; }
 
         [Column("Current_Salary")]
+        [Display(Name = "Current Salary")]
         public Decimal? CurrentSalary { get; set; }
 
         [Column("Current_Rate")]
+        [Display(Name = "Current Rate")]
         public Decimal? CurrentRate { get; set; }
 
         public string Currency { get; set; }
@@ -44,6 +46,7 @@ namespace CareerCloud.Pocos
         public string City { get; set; }
 
         [Column("Zip_Postal_Code")]
+        [Display(Name = "Postal Code")]
         //public string ZipPostalCode { get; set; }
         public string PostalCode { get; set; }
 

@@ -20,10 +20,12 @@ namespace CareerCloud.Pocos
 
         [Column("Company_Name")]
         [Required]
+        [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
 
         [Column("Country_Code")]
         [Required]
+        [Display(Name = "Country Code")]
         public string CountryCode { get; set; }
 
         [Required]
@@ -31,26 +33,32 @@ namespace CareerCloud.Pocos
 
         [Column("Job_Title")]
         [Required]
+        [Display(Name = "Job Title")]
         public string JobTitle { get; set; }
 
         [Column("Job_Description")]
         [Required]
+        [Display(Name = "Job Description")]
         public string JobDescription { get; set; }
 
         [Column("Start_Month")]
         [Required]
+        [Display(Name = "start Month")]
         public Int16 StartMonth { get; set; }
 
         [Column("Start_Year")]
         [Required]
+        [Display(Name = "Start Year")]
         public int StartYear { get; set; }
 
         [Column("End_Month")]
         [Required]
+        [Display(Name = "End Month")]
         public Int16 EndMonth { get; set; }
 
         [Column("End_Year")]
         [Required]
+        [Display(Name = "End Year")]
         public int EndYear { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

@@ -20,6 +20,7 @@ namespace CareerCloud.Pocos
 
         [Column("Country_Code")]
         [Required]
+        [Display(Name = "Country Code")]
         public string CountryCode { get; set; }
 
         [Column("State_Province_Code")]
@@ -35,6 +36,7 @@ namespace CareerCloud.Pocos
         public string City { get; set; }
 
         [Column("Zip_Postal_Code")]
+        [Display(Name = "Postal Code")]
         //public string ZipPostalCode { get; set; }
         public string PostalCode { get; set; }
 

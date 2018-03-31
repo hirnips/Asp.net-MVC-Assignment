@@ -24,6 +24,7 @@ namespace CareerCloud.Pocos
 
         [Column("Skill_Level")]
         [Required]
+        [Display(Name = "Skill Level")]
         public string SkillLevel { get; set; }
 
         [Required]

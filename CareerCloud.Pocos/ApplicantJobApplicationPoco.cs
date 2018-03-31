@@ -23,6 +23,7 @@ namespace CareerCloud.Pocos
 
         [Column("Application_Date")]
         [Required]
+        [Display(Name = "Application Date")]
         public DateTime ApplicationDate { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

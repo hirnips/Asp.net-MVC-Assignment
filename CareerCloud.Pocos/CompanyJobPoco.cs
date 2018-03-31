@@ -22,14 +22,17 @@ namespace CareerCloud.Pocos
 
         [Column("Profile_Created")]
         [Required]
+        [Display(Name = "Profile Created")]
         public DateTime ProfileCreated { get; set; }
 
         [Column("Is_Inactive")]
         [Required]
+        [Display(Name = "Is Inactive")]
         public Boolean IsInactive { get; set; }
 
         [Column("Is_Company_Hidden")]
         [Required]
+        [Display(Name = "Is Company Hidden")]
         public Boolean IsCompanyHidden { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
