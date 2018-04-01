@@ -11,11 +11,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.ApplicantProfile.Currency)
+            @Html.DisplayNameFor(model => model.ApplicantProfile.SecurityLogin.FullName)
         </dt>
 
         <dd>
-            @Html.Display("ApplicantName")
+            @Html.DisplayNameFor(model => model.ApplicantProfile.SecurityLogin.FullName)
         </dd>
 
         <dt>
@@ -23,7 +23,7 @@
         </dt>
 
         <dd>
-            @Html.Display("Job")
+            @Html.DisplayNameFor(model => model.CompanyJob.CompanyJobDescriptions.FirstOrDefault().JobName)
         </dd>
 
         <dt>

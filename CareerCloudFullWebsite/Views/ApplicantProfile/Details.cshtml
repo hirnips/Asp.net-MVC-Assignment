@@ -92,6 +92,57 @@
     </dl>
 
 </div>
+<div>
+    <h2>Job Details of @Model.SecurityLogin.FullName</h2>
+    @if (Model.ApplicantJobApplications.Count > 0)
+    {
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayName("Company Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Job Title")
+                </th>
+                <th>
+                    @Html.DisplayName("Job Descriptionn")
+                </th>
+                <th>
+                    @Html.DisplayName("Job Created")
+                </th>
+                <th>
+                    @Html.DisplayName("Is Inactive")
+                </th>
+            </tr>
+            @foreach (var item in Model.ApplicantJobApplications)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJob.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJob.CompanyJobDescriptions.FirstOrDefault().JobName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJob.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJob.ProfileCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJob.IsInactive)
+                </td>
+            </tr>
+            }
+
+        </table>
+    }
+    else
+    {
+        <p>There is no jobs posted by @Model.SecurityLogin.FullName</p>
+    }
+
+</div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

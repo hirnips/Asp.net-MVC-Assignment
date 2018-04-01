@@ -34,10 +34,10 @@ namespace CareerCloudFullWebsite.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
-            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantLogic.GetApplicantJobApplication(id);
-            ViewBag.ApplicantName = applicantLogic.GetApplicantName(id).FullName;
-            ViewBag.Job = applicantLogic.GetApplicantJob(id).FirstOrDefault().JobName;
+            ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantJobApplicationLogic.Get(id); //db.ApplicantJobApplications.Find(id);
+            //ApplicantJobApplicationPoco applicantJobApplicationPoco = applicantLogic.GetApplicantJobApplication(id);
+            //ViewBag.ApplicantName = applicantLogic.GetApplicantName(id).FullName;
+            //ViewBag.Job = applicantLogic.GetApplicantJob(id).FirstOrDefault().JobName;
 
             if (applicantJobApplicationPoco == null)
             {
