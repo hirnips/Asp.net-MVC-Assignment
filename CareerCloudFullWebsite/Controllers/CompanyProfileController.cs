@@ -52,6 +52,11 @@ namespace CareerCloudFullWebsite.Controllers
             return View();
         }
 
+        public ActionResult PostNewJob(Guid id)
+        {
+            return RedirectToAction("Create", "CompanyJob", new { Company = id });
+        }
+
         // POST: CompanyProfile/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.

@@ -7,15 +7,67 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Company Jobs</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.Label("Job Title", null, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobName, new { htmlAttributes = new { @class = "form-control" } })
+            @*@Html.Editor("txtJobTitle", new { htmlAttributes = new { @class = "form-control" } })*@
+            @Html.ValidationMessageFor(model => model.CompanyJobDescriptions.FirstOrDefault().Job, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Job Discription", null, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobDescriptions, new { htmlAttributes = new { @class = "form-control" } })
+            @*@Html.Editor("txtJobTitle", new { htmlAttributes = new { @class = "form-control" } })*@
+            @Html.ValidationMessageFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobDescriptions, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CompanyJobSkills.FirstOrDefault().Skill, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CompanyJobSkills.FirstOrDefault().Skill, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CompanyJobSkills.FirstOrDefault().Skill, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CompanyJobSkills.FirstOrDefault().SkillLevel, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CompanyJobSkills.FirstOrDefault().SkillLevel, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CompanyJobSkills.FirstOrDefault().SkillLevel, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CompanyJobSkills.FirstOrDefault().Importance, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CompanyJobSkills.FirstOrDefault().Importance, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CompanyJobSkills.FirstOrDefault().Importance, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.CompanyJobEducations.FirstOrDefault().Major, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.CompanyJobEducations.FirstOrDefault().Major, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CompanyJobEducations.FirstOrDefault().Major, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Educational Importance", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBox("EImportance",null,  htmlAttributes : new { @class = "form-control" } )
+            @Html.ValidationMessageFor(model => model.CompanyJobEducations.FirstOrDefault().Importance, "", new { @class = "text-danger" })
+        </div>
+    </div>
     
-    <div class="form-horizontal">
-        <h4>CompanyJobPoco</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
+    @*<div class="form-group">
             @Html.LabelFor(model => model.Company, "Company", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("Company", null, htmlAttributes: new { @class = "form-control" })
@@ -29,34 +81,97 @@
                 @Html.EditorFor(model => model.ProfileCreated, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ProfileCreated, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsInactive, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsInactive)
-                    @Html.ValidationMessageFor(model => model.IsInactive, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsCompanyHidden, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsCompanyHidden)
-                    @Html.ValidationMessageFor(model => model.IsCompanyHidden, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+    <div class="form-group">
+        @Html.LabelFor(model => model.IsInactive, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.IsInactive)
+                @Html.ValidationMessageFor(model => model.IsInactive, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.IsCompanyHidden, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.IsCompanyHidden)
+                @Html.ValidationMessageFor(model => model.IsCompanyHidden, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    @*<h4>Job Skills</h4>
+        <hr />
+        <div>
+            @Html.ActionLink("Add Skills", "Create", "CompanyJobSkill", new { JobId = ViewBag.JobId }, null)
+        </div>*@
+    @*<div class="form-group">
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Select Skill")
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CompanyJobSkills.FirstOrDefault().Job)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CompanyJobSkills.FirstOrDefault().Skill)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CompanyJobSkills.FirstOrDefault().SkillLevel)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CompanyJobSkills.FirstOrDefault().Importance)
+                    </th>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.TimeStamp)
+                        </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.CompanyJobSkills)
+                {
+                    <tr>
+                        <td>
+                            @Html.CheckBox(item.Skill)
+                            @Html.DisplayFor(modelItem => item.Skill)
+                            @Html.Hidden(item.Id.ToString())
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Job)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Skill)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SkillLevel)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Importance)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.TimeStamp)
+                            </td>
+                        <td>
+                           @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>*@
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
 }
 
 <div>

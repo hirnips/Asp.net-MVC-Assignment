@@ -12,17 +12,20 @@ using CareerCloud.BusinessLogicLayer;
 
 namespace CareerCloudFullWebsite.Controllers
 {
+    
     public class CompanyJobSkillController : Controller
     {
         private CompanyJobSkillLogic companyJobSkillLogic = new CompanyJobSkillLogic(new EFGenericRepository<CompanyJobSkillPoco>());
         CompanyJobSkillPoco[] compJobSkillsPoco = new CompanyJobSkillPoco[1];
+        List<CompanyJobSkillPoco> compSkills = new List<CompanyJobSkillPoco>();
         //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: CompanyJobSkill
         public ActionResult Index()
         {
+            //compSkills =  Session["CompanyData"];
             var companyJobSkills = companyJobSkillLogic.GetAll();// db.CompanyJobSkills.Include(c => c.CompanyJob);
-            return View(companyJobSkills.ToList());
+            return View(companyJobSkills);
         }
 
         // GET: CompanyJobSkill/Details/5
@@ -41,9 +44,9 @@ namespace CareerCloudFullWebsite.Controllers
         }
 
         // GET: CompanyJobSkill/Create
-        public ActionResult Create()
+        public ActionResult Create(/*Guid JobId*/)
         {
-            ViewBag.Job = new SelectList(companyJobSkillLogic.GetAll(), "Job", "Job");
+            //ViewBag.Job = JobId; //new SelectList(companyJobSkillLogic.GetAll(), "Job", "Job");
             return View();
         }
 
@@ -54,12 +57,23 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Job,Skill,SkillLevel,Importance,TimeStamp")] CompanyJobSkillPoco companyJobSkillPoco)
         {
+            
             if (ModelState.IsValid)
             {
+               
                 companyJobSkillPoco.Id = Guid.NewGuid();
+                //Session["Data"] = compJobSkillsPoco;
+                //Session["Skill"] = companyJobSkillPoco.Skill;
+                //Session["SkillLevel"] = companyJobSkillPoco.SkillLevel;
+                //Session["Importance"] = companyJobSkillPoco.Importance;
+                //compSkills.Add(companyJobSkillPoco);
+
                 compJobSkillsPoco[0] = companyJobSkillPoco;
+               // companyLogic.AddSkills(companyJobSkillPoco);
+
+                //ViewBag.skills = compJobSkills;
                 companyJobSkillLogic.Add(compJobSkillsPoco);
-                
+
                 return RedirectToAction("Index");
             }
 
@@ -126,13 +140,13 @@ namespace CareerCloudFullWebsite.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            //if (disposing)
-            //{
-            //    db.Dispose();
-            //}
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    //if (disposing)
+        //    //{
+        //    //    db.Dispose();
+        //    //}
+        //    base.Dispose(disposing);
+        //}
     }
 }

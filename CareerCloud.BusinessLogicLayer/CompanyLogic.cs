@@ -14,6 +14,7 @@ namespace CareerCloud.BusinessLogicLayer
         private IDataRepository<CompanyDescriptionPoco> companyDescriptionRepo;
         private IDataRepository<CompanyProfilePoco> companyProfileRepo;
         private IDataRepository<CompanyJobPoco> companyJobRepo;
+        private List<CompanyJobSkillPoco> skills = new List<CompanyJobSkillPoco>();
 
         public CompanyProfilePoco[] GetCompanyByName(string name)
         {
@@ -72,6 +73,15 @@ namespace CareerCloud.BusinessLogicLayer
         {
             EFGenericRepository<SystemLanguageCodePoco> systemLanguageCodeLogic = new EFGenericRepository<SystemLanguageCodePoco>();
             return systemLanguageCodeLogic.GetAll().ToList();
+        }
+
+        public void AddSkills(CompanyJobSkillPoco companyJobSkill)
+        {           
+            skills.Add(companyJobSkill);
+        }
+        public List<CompanyJobSkillPoco> GetSkills()
+        {
+            return skills;
         }
 
     }
