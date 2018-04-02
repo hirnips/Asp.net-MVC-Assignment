@@ -62,8 +62,9 @@
 
 <div>
     <h2>Job Details of @Model.CompanyDescriptions.FirstOrDefault().CompanyName</h2>
-    &nbsp
-    <h4>@Html.ActionLink("Post New Job", "PostNewJob", new { id = Model.Id })</h4>
+    &nbsp;    
+    <h4><b>@Html.ActionLink("Post New Job", "PostNewJob", new { id = Model.Id })</b></h4>
+
 
     @if (Model.CompanyJobs.Count > 0)
     {
@@ -78,32 +79,32 @@
                 <th>
                     @Html.DisplayName("Job Created")
                 </th>
-                <th>
+                @*<th>
                     @Html.DisplayName("Is Inactive")
-                </th>
+                </th>*@
                 <th>
-                    @Html.DisplayName("Is Inactive")
+                    &nbsp;
                 </th>
             </tr>
             @foreach (var item in Model.CompanyJobs)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobDescriptions)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProfileCreated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsInactive)
-                </td>
-                <td>
-                    @Html.ActionLink("Job Details", "ViewJob", "CompanyJob", new { company = Model.Id, Job = item.Id }, null)
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobDescriptions)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProfileCreated)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.IsInactive)
+                    </td>*@
+                    <td>
+                        @Html.ActionLink("Job Details", "ViewJob", "CompanyJob", new { company = Model.Id, Job = item.Id }, null)
+                    </td>
+                </tr>
             }
 
         </table>

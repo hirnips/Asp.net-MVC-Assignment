@@ -1,0 +1,51 @@
+﻿@model IEnumerable<CareerCloud.Pocos.CompanyJobPoco>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProfileCreated)
+        </th>
+        
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
+            </td>            
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.FirstOrDefault().JobName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
+            </td> 
+            <td>
+                @Html.DisplayFor(modelItem => item.ProfileCreated)
+            </td>
+            <td>
+                @Html.ActionLink("View Job Details", "JobDetails", new { id = item.Id })                
+            </td>
+        </tr>
+    }
+
+</table>

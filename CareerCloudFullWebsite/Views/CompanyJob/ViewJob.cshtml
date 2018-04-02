@@ -73,20 +73,23 @@
         <dt>
             @Html.DisplayNameFor(model => model.CompanyJobSkills.FirstOrDefault().Skill)
         </dt>
+
+
         @foreach (var item in Model.FirstOrDefault().CompanyJobSkills)
-    {
-        <dd>
-            @Html.DisplayFor(model => item.Skill)<br />
-        </dd>
-}
+        {
+            <dd>
+                @Html.DisplayFor(model => item.Skill)<br />
+            </dd>
+        }
+
 
         @*<dt>
-            &nbsp;
-        </dt>
+                &nbsp;
+            </dt>
 
-        <dd>
-            @Html.ActionLink("Add More Skills", "Create", "CompanyJobSkill", new { job = Model.FirstOrDefault().Id }, null)
-        </dd>*@
+            <dd>
+                @Html.ActionLink("Add More Skills", "Create", "CompanyJobSkill", new { job = Model.FirstOrDefault().Id }, null)
+            </dd>*@
 
         <dt>
             &nbsp;
@@ -99,10 +102,12 @@
         <dt>
             @Html.DisplayNameFor(model => model.CompanyJobEducations.FirstOrDefault().Major)
         </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FirstOrDefault().CompanyJobEducations.FirstOrDefault().Major)
-        </dd>
+        @foreach (var item in Model.FirstOrDefault().CompanyJobEducations)
+        {
+            <dd>
+                @Html.DisplayFor(model => model.FirstOrDefault().CompanyJobEducations.FirstOrDefault().Major)<br />
+            </dd>
+        }
 
         <dt>
             &nbsp;
@@ -112,17 +117,17 @@
         </dd>
 
         @*<dt>
-            @Html.DisplayNameFor(model => model.TimeStamp)
-        </dt>
+                @Html.DisplayNameFor(model => model.TimeStamp)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.TimeStamp)
-        </dd>*@
+            <dd>
+                @Html.DisplayFor(model => model.TimeStamp)
+            </dd>*@
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Back to Company", "Details", "CompanyProfile", new { id = Model.FirstOrDefault().Company }, null) 
+    @Html.ActionLink("Back to Company", "Details", "CompanyProfile", new { id = Model.FirstOrDefault().Company }, null)
     @*@Html.ActionLink("Back to List", "Index")*@
 </p>
 

@@ -306,6 +306,7 @@
     <Content Include="Views\SecurityRole\Edit.cshtml" />
     <Content Include="Views\SecurityRole\Index.cshtml" />
     <Content Include="Views\CompanyJob\ViewJob.cshtml" />
+    <Content Include="Views\ApplicantProfile\ViewAllJob.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

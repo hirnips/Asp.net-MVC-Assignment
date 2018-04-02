@@ -4,11 +4,9 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Job Details</h2>
 
 <div>
-    <h4>ApplicantProfilePoco</h4>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.SecurityLogin.Login)
@@ -94,6 +92,7 @@
 </div>
 <div>
     <h2>Job Details of @Model.SecurityLogin.FullName</h2>
+    <h4><b>@Html.ActionLink("Applay New Job", "ViewAllJob", new { id = Model.Id })</b></h4>
     @if (Model.ApplicantJobApplications.Count > 0)
     {
         <table class="table">
@@ -116,23 +115,23 @@
             </tr>
             @foreach (var item in Model.ApplicantJobApplications)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanyJob.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanyJob.CompanyJobDescriptions.FirstOrDefault().JobName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanyJob.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanyJob.ProfileCreated)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CompanyJob.IsInactive)
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJob.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJob.CompanyJobDescriptions.FirstOrDefault().JobName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJob.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJob.ProfileCreated)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyJob.IsInactive)
+                    </td>
+                </tr>
             }
 
         </table>
