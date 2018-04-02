@@ -19,7 +19,8 @@ namespace CareerCloudFullWebsite.Controllers
         private CompanyJobEducationLogic companyJobEducationLogic = new CompanyJobEducationLogic(new EFGenericRepository<CompanyJobEducationPoco>());
         private CompanyDescriptionLogic companyDescriptionLogic = new CompanyDescriptionLogic(new EFGenericRepository<CompanyDescriptionPoco>());
         private CompanyJobDescriptionLogic companyJobDescriptionLogic = new CompanyJobDescriptionLogic(new EFGenericRepository<CompanyJobDescriptionPoco>());
-        
+        private CompanyLogic compLogic = new CompanyLogic();
+
         CompanyJobPoco[] compJobPoco = new CompanyJobPoco[1];
         CompanyJobPoco cPoco = new CompanyJobPoco();        
 
@@ -33,18 +34,36 @@ namespace CareerCloudFullWebsite.Controllers
         }
 
         // GET: CompanyJob/Details/5
-        public ActionResult Details(Guid? id)
+        public ActionResult Details(Guid id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            CompanyJobPoco companyJobPoco = companyJobLogic.Get(id.Value); //db.CompanyJobs.Find(id);
-            if (companyJobPoco == null)
+            //Session["Company"] = id;
+            //Guid cID = Guid.Parse(Session["Company"].ToString());            
+            compJobPoco = compLogic.GetCompanybyCompanyID(id); //CompanyJobPoco companyJobPoco =  //companyJobLogic.Get(id.Value); //db.CompanyJobs.Find(id);
+            if (compJobPoco == null)
             {
                 return HttpNotFound();
             }
-            return View(companyJobPoco);
+            return View(compJobPoco);
+        }
+
+        public ActionResult ViewJob(Guid company, Guid Job)
+        {
+            if (company == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            //Session["Company"] = id;
+            //Guid cID = Guid.Parse(Session["Company"].ToString());            
+            compJobPoco = compLogic.GetCompanybyIds(company, Job); //CompanyJobPoco companyJobPoco =  //companyJobLogic.Get(id.Value); //db.CompanyJobs.Find(id);
+            if (compJobPoco == null)
+            {
+                return HttpNotFound();
+            }
+            return View(compJobPoco);
         }
 
         // GET: CompanyJob/Create
@@ -65,6 +84,7 @@ namespace CareerCloudFullWebsite.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Company,ProfileCreated,IsInactive,IsCompanyHidden,TimeStamp")] CompanyJobPoco companyJobPoco, string JobName, string JobDescriptions, string Major, int  Importance, string Skill, string SkillLevel, short EImportance)
         {
+            Session["Company"] = companyJobPoco.Company;
             if (ModelState.IsValid)
             {
 
@@ -109,7 +129,8 @@ namespace CareerCloudFullWebsite.Controllers
                 companyJobEducationLogic.Add(compEducationPoco);
                 companyJobDescriptionLogic.Add(compJobDescriptionPoco);
 
-                return RedirectToAction("Details", "CompanyProfile", new { id = companyJobPoco.Company });
+                //return RedirectToAction("Details", "CompanyProfile", new { id = companyJobPoco.Company });
+                return RedirectToAction("Details", "CompanyJob", new { id = companyJobPoco.Company });
             }
 
             ViewBag.Company = new SelectList(companyJobLogic.GetAll(), "Company", "Company");

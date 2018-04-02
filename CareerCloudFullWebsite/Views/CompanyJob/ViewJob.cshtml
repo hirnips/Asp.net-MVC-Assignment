@@ -79,20 +79,14 @@
             @Html.DisplayFor(model => item.Skill)<br />
         </dd>
 }
-        <dt>
-            &nbsp;
-        </dt>
-        <dd>
-            &nbsp;
-        </dd>
 
-        <dt>
+        @*<dt>
             &nbsp;
         </dt>
 
         <dd>
             @Html.ActionLink("Add More Skills", "Create", "CompanyJobSkill", new { job = Model.FirstOrDefault().Id }, null)
-        </dd>
+        </dd>*@
 
         <dt>
             &nbsp;
@@ -110,6 +104,13 @@
             @Html.DisplayFor(model => model.FirstOrDefault().CompanyJobEducations.FirstOrDefault().Major)
         </dd>
 
+        <dt>
+            &nbsp;
+        </dt>
+        <dd>
+            &nbsp;
+        </dd>
+
         @*<dt>
             @Html.DisplayNameFor(model => model.TimeStamp)
         </dt>
@@ -124,3 +125,5 @@
     @Html.ActionLink("Back to Company", "Details", "CompanyProfile", new { id = Model.FirstOrDefault().Company }, null) 
     @*@Html.ActionLink("Back to List", "Index")*@
 </p>
+
+

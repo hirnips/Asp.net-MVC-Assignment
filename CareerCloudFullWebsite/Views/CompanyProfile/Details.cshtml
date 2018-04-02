@@ -81,23 +81,29 @@
                 <th>
                     @Html.DisplayName("Is Inactive")
                 </th>
+                <th>
+                    @Html.DisplayName("Is Inactive")
+                </th>
             </tr>
             @foreach (var item in Model.CompanyJobs)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobDescriptions)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProfileCreated)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsInactive)
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.Where(c => c.Job == item.Id).FirstOrDefault().JobDescriptions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProfileCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsInactive)
+                </td>
+                <td>
+                    @Html.ActionLink("Job Details", "ViewJob", "CompanyJob", new { company = Model.Id, Job = item.Id }, null)
+                </td>
+            </tr>
             }
 
         </table>

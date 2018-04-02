@@ -75,13 +75,25 @@ namespace CareerCloud.BusinessLogicLayer
             return systemLanguageCodeLogic.GetAll().ToList();
         }
 
-        public void AddSkills(CompanyJobSkillPoco companyJobSkill)
-        {           
-            skills.Add(companyJobSkill);
-        }
-        public List<CompanyJobSkillPoco> GetSkills()
+        //public void AddSkills(CompanyJobSkillPoco companyJobSkill)
+        //{           
+        //    skills.Add(companyJobSkill);
+        //}
+        //public List<CompanyJobSkillPoco> GetSkills()
+        //{
+        //    return skills;
+        //}
+
+        public CompanyJobPoco[] GetCompanybyCompanyID(Guid CId)
         {
-            return skills;
+            companyJobRepo = new EFGenericRepository<CompanyJobPoco>();
+            return companyJobRepo.GetList(a => a.Company == CId).OrderByDescending(p => p.ProfileCreated).Take(1).ToArray();
+        }
+
+        public CompanyJobPoco[] GetCompanybyIds(Guid CId, Guid JId)
+        {
+            companyJobRepo = new EFGenericRepository<CompanyJobPoco>();
+            return companyJobRepo.GetList(a => a.Company == CId).Where(a => a.Id == JId).OrderByDescending(p => p.ProfileCreated).Take(1).ToArray();
         }
 
     }

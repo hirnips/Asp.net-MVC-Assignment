@@ -44,7 +44,7 @@ namespace CareerCloudFullWebsite.Controllers
         }
 
         // GET: CompanyJobSkill/Create
-        public ActionResult Create(/*Guid JobId*/)
+        public ActionResult Create(Guid job)
         {
             //ViewBag.Job = JobId; //new SelectList(companyJobSkillLogic.GetAll(), "Job", "Job");
             return View();
@@ -69,12 +69,16 @@ namespace CareerCloudFullWebsite.Controllers
                 //compSkills.Add(companyJobSkillPoco);
 
                 compJobSkillsPoco[0] = companyJobSkillPoco;
-               // companyLogic.AddSkills(companyJobSkillPoco);
+                Guid id1 = Guid.Parse(Session["Company"].ToString());
+                //companyJobSkillPoco.Job = id;
+
+                // companyLogic.AddSkills(companyJobSkillPoco);
 
                 //ViewBag.skills = compJobSkills;
                 companyJobSkillLogic.Add(compJobSkillsPoco);
 
-                return RedirectToAction("Index");
+                
+                return RedirectToAction("Details","CompanyJob", new { id = id1});
             }
 
             ViewBag.Job = new SelectList(companyJobSkillLogic.GetAll(), "Job", "Job");
