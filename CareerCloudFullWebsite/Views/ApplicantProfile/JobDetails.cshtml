@@ -1,0 +1,116 @@
+﻿@model CareerCloud.Pocos.CompanyJobPoco
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>CompanyJobPoco</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
+        </dd>
+
+        <dt>
+            &nbsp;
+        </dt>
+        <dd>
+            &nbsp;
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobName)
+        </dd>
+
+        <dt>
+            &nbsp;
+        </dt>
+        <dd>
+            &nbsp;
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
+        </dd>
+
+        <dt>
+            &nbsp;
+        </dt>
+        <dd>
+            &nbsp;
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Job Posted")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProfileCreated)
+        </dd>
+
+        <dt>
+            &nbsp;
+        </dt>
+        <dd>
+            &nbsp;
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompanyJobSkills.FirstOrDefault().Skill)
+        </dt>
+
+
+        @foreach (var item in Model.CompanyJobSkills)
+        {
+            <dd>
+                @Html.DisplayFor(model => item.Skill)<br />
+            </dd>
+        }
+
+
+        <dt>
+            &nbsp;
+        </dt>
+        <dd>
+            &nbsp;
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompanyJobEducations.FirstOrDefault().Major)
+        </dt>
+        @foreach (var item in Model.CompanyJobEducations)
+        {
+            <dd>
+                @Html.DisplayFor(model => model.CompanyJobEducations.FirstOrDefault().Major)<br />
+            </dd>
+        }
+
+        <dt>
+            &nbsp;
+        </dt>
+        <dd>
+            &nbsp;
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Apply", "ApplyJob", "ApplicantProfile", new { id = Model.Id }, null)   
+</p>
+
+
