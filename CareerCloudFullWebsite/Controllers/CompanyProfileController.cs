@@ -23,9 +23,26 @@ namespace CareerCloudFullWebsite.Controllers
         //private CareerCloudContext db = new CareerCloudContext();
 
         // GET: CompanyProfile
-        public ActionResult Index()
+        public ActionResult Index(string search)
         {
-            return View(companyProfileLogic.GetAll().ToList());
+            List<CompanyProfilePoco> companyJobs = new List<CompanyProfilePoco>();
+
+            //Session["Applicant"] = id.ToString();
+            if (search == null)
+            {
+                companyJobs = companyProfileLogic.GetAll();
+            }
+            else
+            {
+                companyJobs = companyLogic.GetCompanyByName(search).ToList();
+            }
+            ModelState.Clear();
+            return View(companyJobs.ToList());
+
+            //return View(companyProfileLogic.GetAll().ToList());
+
+           
+
         }
 
         // GET: CompanyProfile/Details/5

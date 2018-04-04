@@ -6,9 +6,30 @@
 
 <h2>Companies List</h2>
 
-@*<p>
-    @Html.ActionLink("Create New", "Create")
-</p>*@
+<p>
+    @Html.ActionLink("Create Company", "Create")
+</p>
+<p>
+    @using (Html.BeginForm("Index", "CompanyProfile", FormMethod.Get))
+    {
+        <table>
+            <tr>
+                <td class="col-sm-*">
+                    <b>
+                        Search Company: &nbsp;
+                    </b>
+                </td>
+                <td class="col-sm-*">
+                    @Html.Editor("search", new { htmlAttributes = new { @class = "form-control" } })
+                </td>
+                <td class="col-sm-*">
+                    <input type="submit" value="Search" class="btn btn-primary" />
+                </td>
+                <td class="col-sm-7"></td>
+            </tr>
+        </table>
+    }
+</p>
 <table class="table">
     <tr>
         <th>

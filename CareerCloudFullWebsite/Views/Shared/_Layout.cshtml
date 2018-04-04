@@ -24,10 +24,13 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Employer", "Index", "CompanyProfile")</li>
+                    <li>@Html.ActionLink("Applicant", "Index", "ApplicantProfile")</li>
                 </ul>
-                <p class="nav navbar-text navbar-right">Hello, @User.Identity.Name!</p>
+                <p class="nav navbar-text navbar-right">
+                    Hello Administrator  @*@User.Identity.Name!*@
+                    @Html.ActionLink("Sign Out", "Index", "Home")
+                </p>
             </div>
         </div>
     </div>
