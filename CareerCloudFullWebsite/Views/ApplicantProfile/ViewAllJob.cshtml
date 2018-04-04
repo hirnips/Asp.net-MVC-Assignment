@@ -2,50 +2,79 @@
 
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Jobs List</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @*@Html.ActionLink("Create New", "Create")*@
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProfileCreated)
-        </th>
-        
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+<p>
+    @using (Html.BeginForm("ViewAllJob", "ApplicantProfile", FormMethod.Get))
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
-            </td>            
-            <td>
-                @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.FirstOrDefault().JobName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
-            </td> 
-            <td>
-                @Html.DisplayFor(modelItem => item.ProfileCreated)
-            </td>
-            <td>
-                @Html.ActionLink("View Job Details", "JobDetails", new { id = item.Id })                
-            </td>
-        </tr>
+        <table>
+            <tr>
+                <td class="col-sm-*">
+                    <b>
+                        Search Job: &nbsp;
+                    </b>
+                </td>
+                <td class="col-sm-*">
+                    @Html.Editor("search", new { htmlAttributes = new { @class = "form-control" } })
+                </td>
+                <td class="col-sm-*">
+                    <input type="submit" value="Search" class="btn btn-primary" />
+                </td>
+                <td class="col-sm-7"></td>
+            </tr>
+        </table>
     }
+</p>
+<br />
+@if (Model.Count() > 0)
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
+            </th>
+            <th>
+                @Html.DisplayName("Job Posted")
+            </th>
 
-</table>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.FirstOrDefault().JobName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyJobDescriptions.FirstOrDefault().JobDescriptions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProfileCreated)
+                </td>
+                <td class="col-sm-1">
+                    <b>@Html.ActionLink("View Job", "JobDetails", new { id = item.Id })</b>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p> No Record found for this search criteria please try again!!!!!</p>
+}

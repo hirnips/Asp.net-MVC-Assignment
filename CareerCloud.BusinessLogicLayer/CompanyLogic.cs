@@ -14,6 +14,7 @@ namespace CareerCloud.BusinessLogicLayer
         private IDataRepository<CompanyDescriptionPoco> companyDescriptionRepo;
         private IDataRepository<CompanyProfilePoco> companyProfileRepo;
         private IDataRepository<CompanyJobPoco> companyJobRepo;
+        private IDataRepository<CompanyJobDescriptionPoco> companyJobDescriptionRepo;
         private List<CompanyJobSkillPoco> skills = new List<CompanyJobSkillPoco>();
 
         public CompanyProfilePoco[] GetCompanyByName(string name)
@@ -22,6 +23,15 @@ namespace CareerCloud.BusinessLogicLayer
             IEnumerable<Guid> desc = companyDescriptionRepo.GetList(d => d.CompanyName.Contains(name)).Select(c => c.Company);
             companyProfileRepo = new EFGenericRepository<CompanyProfilePoco>();
             return companyProfileRepo.GetList(c => desc.Contains(c.Id), c => c.CompanyDescriptions).ToArray();
+        }
+
+        public CompanyJobPoco[] GetCompanySearch(String search)
+        {
+            companyJobRepo = new EFGenericRepository<CompanyJobPoco>();
+            companyJobDescriptionRepo = new EFGenericRepository<CompanyJobDescriptionPoco>();
+
+            IEnumerable<Guid> JobDescID = companyJobDescriptionRepo.GetList(d => d.JobName.Contains(search)).Select(c => c.Job);
+            return companyJobRepo.GetList(c => JobDescID.Contains(c.Id), c => c.CompanyJobDescriptions).ToArray();
         }
 
         public CompanyProfilePoco GetJobDescription(Guid ID)
@@ -95,7 +105,6 @@ namespace CareerCloud.BusinessLogicLayer
             companyJobRepo = new EFGenericRepository<CompanyJobPoco>();
             return companyJobRepo.GetList(a => a.Company == CId).Where(a => a.Id == JId).OrderByDescending(p => p.ProfileCreated).Take(1).ToArray();
         }
-
     }
 }
 

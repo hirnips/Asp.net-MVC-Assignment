@@ -18,6 +18,7 @@ namespace CareerCloudFullWebsite.Controllers
         private ApplicantJobApplicationLogic applicantJobApplicantLogic = new ApplicantJobApplicationLogic(new EFGenericRepository<ApplicantJobApplicationPoco>());
         private CompanyJobLogic companyJobLogic = new CompanyJobLogic(new EFGenericRepository<CompanyJobPoco>());
         ApplicantProfilePoco[] appProfilePoco = new ApplicantProfilePoco[1];
+        private CompanyLogic companyLogic = new CompanyLogic();
         //private CareerCloudContext db = new CareerCloudContext();
 
 
@@ -61,10 +62,20 @@ namespace CareerCloudFullWebsite.Controllers
             return View(applicantProfilePoco);
         }
 
-        public ActionResult ViewAllJob(Guid id)
+        public ActionResult ViewAllJob(Guid id, string search)
         {
-            var companyJobs = companyJobLogic.GetAll();             
-            Session["Applicant"] = id.ToString();                     
+            List<CompanyJobPoco> companyJobs = new List<CompanyJobPoco>();
+
+            Session["Applicant"] = id.ToString();
+            if (search == null)
+            {
+                companyJobs = companyJobLogic.GetAll();
+            }
+            else
+            {
+                companyJobs = companyLogic.GetCompanySearch(search).ToList();
+            }
+            ModelState.Clear();
             return View(companyJobs.ToList());
         }
 
@@ -112,7 +123,7 @@ namespace CareerCloudFullWebsite.Controllers
                 appProfilePoco[0] = applicantProfilePoco;
 
                 applicantProfileLogic.Add(appProfilePoco);
-                
+
                 return RedirectToAction("Index");
             }
 
