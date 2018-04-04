@@ -4,11 +4,11 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Job Details</h2>
 
 <div>
-    <h4>CompanyJobPoco</h4>
-    <hr />
+    @*<h4>CompanyJobPoco</h4>
+    <hr />*@
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.CompanyProfile.CompanyDescriptions.FirstOrDefault().CompanyName)
@@ -91,7 +91,7 @@
         </dt>
 
         <dd>
-            @Html.ActionLink("Add More Skills", "Create", "CompanyJobSkill", new { job = Model.FirstOrDefault().Id }, null)
+            <b>@Html.ActionLink("Add More Skills", "Create", "CompanyJobSkill", new { job = Model.FirstOrDefault().Id }, null)</b>
         </dd>
 
         <dt>

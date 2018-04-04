@@ -31,7 +31,7 @@ namespace CareerCloudFullWebsite.Controllers
         // GET: CompanyProfile/Details/5
         public ActionResult Details(Guid id)
         {
-
+            Session["Company"] = id.ToString();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
